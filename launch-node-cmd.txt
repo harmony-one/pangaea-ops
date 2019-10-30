@@ -1,0 +1,21 @@
+set -eu
+mkdir -p logs
+if [ -d latest -a ! -L latest ]
+then
+	mv latest logs/old
+fi
+unset -v ts
+ts=$(date +%Y-%m-%dT%H:%M:%SZ)
+mkdir "logs/${ts}"
+rm -f latest
+ln -sf "logs/${ts}" latest
+LD_LIBRARY_PATH=. ./harmony \
+	-bootnodes=$(cat bootnodes.txt) \
+	-min_peers=32 \
+	-blspass=pass:"" \
+	-blskey_file=bls.key \
+	-network_type=testnet \
+	-dns_zone=p.hmny.io \
+	> latest/harmony.out \
+	2> latest/harmony.err &
+echo $! > latest/harmony.pid

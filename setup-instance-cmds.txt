@@ -1,0 +1,11 @@
+sudo yum install -y -q jq
+mkdir -p .aws
+cat <<- ENDEND > .aws/config
+[profile downloader]
+role_arn = arn:aws:iam::656503231766:role/PangaeaNodeSoftwareDownloader
+credential_source = Ec2InstanceMetadata
+ENDEND
+aws s3 sync --profile=downloader --quiet --exact-timestamps s3://unique-bucket-bin/PANGAEA/ ./
+chmod a+x harmony bootnode wallet staking-standalone
+#set -eu; key=$(jqi -r .\"hmy:BLSPubKey\"); case "${key}" in null) exit;; esac; aws s3 cp "s3://harmony-secret-keys/bls-test/${key}.key" "${key}.key"; ln -sf "${key}.key" "bls.key"
+echo "/ip4/54.218.73.167/tcp/9876/p2p/QmWBVCPXQmc2ULigm3b9ayCZa15gj25kywiQQwPhHCZeXj,/ip4/18.232.171.117/tcp/9876/p2p/QmfJ71Eb7XTDs8hX2vPJ8un4L7b7RiDk6zCzWVxLXGA6MA" > bootnodes.txt

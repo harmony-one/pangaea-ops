@@ -1,0 +1,5 @@
+UserKnownHostsFile known_hosts
+StrictHostKeyChecking no
+ControlPath ~/.ssh/ctl/%r@%h[%p]
+ControlMaster auto
+ControlPersist yes
