@@ -1,1 +1,99 @@
-/home/ec2-user/bin/hssh
+#!/usr/bin/env python
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+import argparse
+import os
+import os.path
+import socket
+import sys
+
+
+def get_region_from_name(name):
+    """Return the AWS region in which the given DNS name exists."""
+    dcs = name.split('.')
+    if dcs[-2:] == ['amazonaws', 'com']:
+        aws_dcs = dcs[:-2]
+        if len(aws_dcs) > 1 and aws_dcs[-1] == 'compute-1':
+            return 'us-east-1'
+        elif len(aws_dcs) > 2 and aws_dcs[-1] == 'compute':
+            return aws_dcs[-2]
+    raise ValueError("cannot deduce region from name {}".format(name))
+
+
+REGION_NAMES = {
+        'us-east-1': 'virginia',
+        'us-east-2': 'ohio',
+        'us-west-1': 'california',
+        'us-west-2': 'oregon',
+        'ap-northeast-1': 'tokyo',
+        'ap-southeast-1': 'singapore',
+        'eu-central-1': 'frankfurt',
+        'eu-west-1': 'ireland',
+}
+
+
+def main():
+    default_port = 22
+    try:
+        default_key_dir = os.environ['HSSH_KEY_DIR']
+    except KeyError:
+        default_key_dir = os.path.join(os.environ['HOME'], '.ssh', 'keys')
+    default_known_hosts = os.environ.get('HSSH_KNOWN_HOSTS')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', '-p', metavar='PORT',
+                        help="""port number (default {})"""
+                             .format(default_port))
+    parser.add_argument('--key-dir', '-K', metavar='DIR',
+                        help="""find keys in DIR (default: {})"""
+                             .format(default_key_dir))
+    parser.add_argument('--known-hosts', '-H', metavar='FILE',
+                        help="""use custom known-hosts FILE (default: {})"""
+                             .format(default_known_hosts or "SSH default"))
+    parser.add_argument('host', metavar='HOST',
+                        help="""hostname to which to connect""")
+    parser.add_argument('ssh_args', nargs='*', metavar='ARG',
+                        help="""extra ssh(1) args to pass""")
+    parser.set_defaults(port=default_port,
+                        key_dir=default_key_dir,
+                        known_hosts=default_known_hosts)
+    args = parser.parse_args()
+    host = args.host
+    try:
+        sep_idx = args.ssh_args.index('-')
+    except ValueError:
+        ssh_opts = args.ssh_args
+        ssh_remote_cmd = []
+    else:
+        ssh_opts = args.ssh_args[:sep_idx]
+        ssh_remote_cmd = args.ssh_args[sep_idx + 1:]
+    if '@' not in host:
+        host = 'ec2-user@' + host
+    for ai in socket.getaddrinfo(
+            host.split('@')[-1], args.port,
+            socket.AF_UNSPEC, socket.SOCK_STREAM, 0, 0,
+    ):
+        family, socktype, protocol, canonname, sockaddr = ai
+        host1, port = socket.getnameinfo(sockaddr, socket.NI_NAMEREQD)
+        region = get_region_from_name(host1)
+        region_name = REGION_NAMES[region]
+        key_filename = '{}-key-benchmark.pem'.format(region_name)
+        key_path = os.path.join(args.key_dir, key_filename)
+        hmy_key_path = os.path.join(args.key_dir, 'harmony-node.pem')
+        ssh_cmd = ['ssh']
+        ssh_cmd.extend(ssh_opts)
+        if args.known_hosts is not None:
+            ssh_cmd.extend([
+                '-o', 'UserKnownHostsFile=' + args.known_hosts,
+            ])
+        ssh_cmd.extend([
+            '-p', str(sockaddr[1]),
+            '-i', key_path,
+            '-i', hmy_key_path,
+            host,
+        ])
+        ssh_cmd.extend(ssh_remote_cmd)
+        os.execvp(ssh_cmd[0], ssh_cmd)
+
+
+if __name__ == '__main__':
+    sys.exit(main() or 0)
