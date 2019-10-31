@@ -1,3 +1,59 @@
+set -eu
+
+unset -v az region endpoint
+az=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+region="${az}"
+while :
+do
+	case "${region}" in
+	*[a-z]) region="${region%?}";;
+	*) break;;
+	esac
+done
+case "${region}" in
+us-east-1) endpoint=https://vpc-pangaea-qwpqnlx3s5da3sj4bg3e3tajyq.us-east-1.es.amazonaws.com:443/;;
+us-east-2) endpoint=https://vpc-pangaea-fo4jvbehudxockf43y3ufswwda.us-east-2.es.amazonaws.com:443/;;
+us-west-1) endpoint=https://vpc-pangaea-qdr25qbanmx6nv5mrpuappc3dm.us-west-1.es.amazonaws.com:443/;;
+us-west-2) endpoint=https://vpc-pangaea-owsmojqyoi5jcc55aroxcdx2fa.us-west-2.es.amazonaws.com:443/;;
+ap-southeast-1) endpoint=https://vpc-pangaea-3tm7kwkzmuwyqcp54sj225iyqe.ap-southeast-1.es.amazonaws.com:443/;;
+ap-northeast-1) endpoint=https://vpc-pangaea-xczrz6acqlcl22nug2znwxpo4e.ap-northeast-1.es.amazonaws.com:443/;;
+eu-central-1) endpoint=https://vpc-pangaea-6xkfountwief5ibwcyipughe3i.eu-central-1.es.amazonaws.com:443/;;
+eu-west-1) endpoint=https://vpc-pangaea-gtxijw6mggodjwz6h2u4qkxhdm.eu-west-1.es.amazonaws.com:443/;;
+*) echo "unsupported region ${region}"; exit 69;;
+esac
+
+sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+sudo tee /etc/yum.repos.d/elastic-7.x.repo > /dev/null << 'ENDEND'
+[elastic-7.x]
+name=Elastic repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/oss-7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+ENDEND
+sudo yum install -y -q metricbeat
+sudo tee /etc/metricbeat/metricbeat.yml > /dev/null << ENDEND
+metricbeat.config.modules:
+  path: \${path.config}/modules.d/*.yml
+  reload.enabled: false
+output.elasticsearch:
+  hosts:
+  - ${endpoint}
+processors:
+- add_host_metadata: null
+- add_cloud_metadata: null
+setup.kibana: null
+setup.template.settings:
+  index.codec: best_compression
+  index.number_of_shards: 1
+setup.ilm.enabled: false
+ENDEND
+
+sudo systemctl enable metricbeat.service
+sudo systemctl start metricbeat.service
+
 sudo yum install -y -q jq
 mkdir -p .aws
 cat <<- ENDEND > .aws/config
