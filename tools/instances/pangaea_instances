@@ -1,0 +1,105 @@
+#!/usr/bin/env ruby
+
+# Requires that Ruby is installed - optimally 2.6.5
+# Also requires that the aws-sdk-ec2 gem is installed -> gem install aws-sdk-ec2
+
+# Usage: ./pangaea_instances YOUR_MFA_PANGAEA_PROFILE
+
+require "aws-sdk-ec2"
+require "csv"
+
+profile                 =   !ARGV[0].to_s.empty? ? ARGV[0].strip : "seb_mfa_pangaea"
+
+class PangaeaInstances
+  attr_accessor :profile, :ec2_client, :filters, :data, :headers
+  
+  def initialize(profile:)
+    self.profile        =   profile
+    
+    self.ec2_client     =   Aws::EC2::Client.new(profile: self.profile)
+    
+    self.filters        =   [
+      {
+        name: 'tag:Name',
+        values: ['Pangaea Node']
+      },
+      {
+        name: 'tag:hmy:Shard',
+        values: ['2']
+      }
+    ]
+    
+    self.data           =   {}
+    
+    self.headers        =   [
+      "Instance ID",
+      "Instance Type",
+      "Zone",
+      "Ip Address",
+      "Shard ID",
+      "BLS Key"
+    ]
+  end
+  
+  def regions
+    self.ec2_client.describe_regions&.regions&.collect { |region| region.region_name }
+  end
+  
+  def fetch_instances
+    regions.each do |region|
+      ec2_resource      =   Aws::EC2::Resource.new(profile: self.profile, region: region)
+      results           =   ec2_resource.instances(filters: self.filters)
+      
+      results&.each do |instance|
+        process_instance(instance)
+      end
+    end
+  end
+  
+  def process_instance(instance)
+    shard_id            =   instance.tags.select { |tag| tag.key.eql?("hmy:Shard") }&.first&.value
+    bls_key             =   instance.tags.select { |tag| tag.key.eql?("hmy:BLSPubKey") }&.first&.value
+    
+    puts "Found instance: ID: #{instance.id}, type: #{instance.instance_lifecycle}, zone: #{instance.placement.availability_zone}, ip_address: #{instance.public_ip_address}, shard_id: #{shard_id}, bls_key: #{bls_key}"
+    
+    if !instance.id.to_s.empty? && !instance.public_ip_address.to_s.empty? && !shard_id.to_s.empty?
+      self.data[instance.id]    =   {
+        id:         instance.id,
+        type:       instance.instance_lifecycle,
+        zone:       instance.placement.availability_zone,
+        ip_address: instance.public_ip_address,
+        shard_id:   shard_id,
+        bls_key:    bls_key
+      }
+    end
+  end
+  
+  def export_to_csv(file_path: nil)
+    file_path   ||=   "#{File.dirname(__FILE__)}/pangaea_instances.csv"
+    FileUtils.rm_rf file_path
+    
+    fetch_instances
+    
+    CSV.open(file_path, "w") do |csv|
+      csv     <<  self.headers
+      
+      self.data.each do |instance_id, instance|
+        csv   <<   [
+          instance[:id],
+          instance[:type],
+          instance[:zone],
+          instance[:ip_address],
+          instance[:shard_id],
+          instance[:bls_key]
+        ]
+      end
+    end
+  end
+  
+  def self.export_to_csv(profile:, file_path: nil)
+    self.new(profile: profile).export_to_csv(file_path: file_path)
+  end
+  
+end
+
+PangaeaInstances.export_to_csv(profile: profile)
