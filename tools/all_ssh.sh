@@ -68,11 +68,11 @@ print_instances() {
 	esac 
 }
 
-cd "${progdir}"
 print_instances |
 jq -r '.PublicIpAddress + "	" + (. | tojson)' |
 (
-	unset -v ip instance_json cmd1
+	unset -v ip instance_json cmd1 ssh_config
+	ssh_config="${progdir}/ssh_config"
 	while IFS='	' read -r ip instance_json
 	do
 		instance_json_q=$(shell_quote "${instance_json}")
@@ -80,11 +80,11 @@ jq -r '.PublicIpAddress + "	" + (. | tojson)' |
 			instance_json='"$(shell_quote "${instance_json}")"'
 			jqi() { echo "${instance_json}" | jq "$@"; }
 		'"${cmd}"
-		if ssh -F ssh_config -O check "ec2-user@${ip}" 2> /dev/null
+		if ssh -F "${ssh_config}" -O check "ec2-user@${ip}" 2> /dev/null
 		then
-			ssh -F ssh_config -n "ec2-user@${ip}" "${cmd1}"
+			ssh -F "${ssh_config}" -n "ec2-user@${ip}" "${cmd1}"
 		else
-			"${progdir}/hssh" "ec2-user@${ip}" -- -F ssh_config -n - "${cmd1}"
+			"${progdir}/hssh" "ec2-user@${ip}" -- -F "${ssh_config}" -n - "${cmd1}"
 		fi 2>&1 | sed "s/^/${ip}	/" &
 	done
 	wait
