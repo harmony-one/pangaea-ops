@@ -16,6 +16,7 @@ LD_LIBRARY_PATH=. ./harmony \
 	-blskey_file=bls.key \
 	-network_type=testnet \
 	-dns_zone=p.hmny.io \
+	-public_rpc \
 	> latest/harmony.out \
 	2> latest/harmony.err &
 echo $! > latest/harmony.pid
