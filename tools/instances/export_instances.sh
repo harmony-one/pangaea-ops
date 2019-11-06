@@ -34,7 +34,7 @@ if [ -z "$format" ]; then
 fi
 
 if [ ! -z "$shard_id" ]; then
-  filters="--filters Name=tag:hmy:Shard,Values=2"
+  filters="--filters Name=tag:hmy:Shard,Values=${shard_id}"
 fi
 
 case $format in
