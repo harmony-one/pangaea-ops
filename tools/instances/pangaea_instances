@@ -44,8 +44,10 @@ class PangaeaInstances
     self.data           =   {}
     
     self.headers        =   [
+      "Provider",
       "Instance ID",
       "Instance Type",
+      "Instance Lifecycle",
       "Zone",
       "Ip Address",
       "Shard ID",
@@ -76,7 +78,7 @@ class PangaeaInstances
     shard_id            =   instance.tags.select { |tag| tag.key.eql?("hmy:Shard") }&.first&.value
     bls_public_key      =   instance.tags.select { |tag| tag.key.eql?("hmy:BLSPubKey") }&.first&.value
     
-    puts "Found instance: ID: #{instance.id}, type: #{instance.instance_lifecycle}, zone: #{instance.placement.availability_zone}, ip address: #{instance.public_ip_address}, shard id: #{shard_id}, bls public key: #{bls_public_key}"
+    puts "Found instance: ID: #{instance.id}, type: #{instance.instance_type}, lifecycle: #{instance.instance_lifecycle}, zone: #{instance.placement.availability_zone}, ip address: #{instance.public_ip_address}, shard id: #{shard_id}, bls public key: #{bls_public_key}"
     
     if !instance.id.to_s.empty? && !instance.public_ip_address.to_s.empty? && !shard_id.to_s.empty?
       bls_private_key   =   parse_private_key(shard_id: shard_id, bls_public_key: bls_public_key)
@@ -84,11 +86,14 @@ class PangaeaInstances
       wallet_data       =   !wallet_address.to_s.empty? ? parse_wallet_data(shard_id: shard_id, address: wallet_address) : nil
       
       self.data[instance.id]    =   {
+        provider:         "AWS",
         id:               instance.id,
-        type:             instance.instance_lifecycle,
+        type:             instance.instance_type,
+        lifecycle:        instance.instance_lifecycle,
         zone:             instance.placement.availability_zone,
         ip_address:       instance.public_ip_address,
         shard_id:         shard_id,
+        operated_by:      "Internal",
         bls_public_key:   bls_public_key,
         bls_private_key:  bls_private_key,
         wallet_address:   wallet_address,
@@ -131,15 +136,15 @@ class PangaeaInstances
       csv     <<  self.headers
       
       self.data.each do |instance_id, instance|
-        pp instance
-        
         csv   <<   [
+          instance[:provider],
           instance[:id],
           instance[:type],
+          instance[:lifecycle],
           instance[:zone],
           instance[:ip_address],
           instance[:shard_id],
-          "Internal",
+          instance[:operated_by],
           instance[:bls_public_key],
           instance[:bls_private_key],
           instance[:wallet_address],
