@@ -6,12 +6,13 @@
 # Usage: ./pangaea_instances YOUR_MFA_PANGAEA_PROFILE
 
 require "aws-sdk-ec2"
+require "net/http"
 require "csv"
 
 profile                 =   !ARGV[0].to_s.empty? ? ARGV[0].strip : "seb_mfa_pangaea"
 
 class PangaeaInstances
-  attr_accessor :profile, :ec2_client, :filters, :data, :headers
+  attr_accessor :profile, :ec2_client, :filters, :relations, :paths, :data, :headers
   
   def initialize(profile:)
     self.profile        =   profile
@@ -29,6 +30,17 @@ class PangaeaInstances
       }
     ]
     
+    self.relations      =   {}
+    
+    # These paths refer to the expanded zip files provided by Eugene (shared on the P-OPS shared drive)
+    # They are placed in the data folder relative to this script, so e.g. pangaea-ops/tools/instances/data
+    # Wallets files are placed in pangaea-ops/tools/instances/data/acc
+    # Bls files are placed in pangaea-ops/tools/instances/data/bls
+    self.paths          =   {
+      wallets: "#{File.dirname(__FILE__)}/data/acc/pga-acc-s%d",
+      bls:     "#{File.dirname(__FILE__)}/data/bls/pga-bls-s%d"
+    }
+    
     self.data           =   {}
     
     self.headers        =   [
@@ -37,7 +49,11 @@ class PangaeaInstances
       "Zone",
       "Ip Address",
       "Shard ID",
-      "BLS Key"
+      "Operated By",
+      "BLS Public Key",
+      "BLS Private Key",
+      "Wallet Address",
+      "Wallet Data"
     ]
   end
   
@@ -58,39 +74,76 @@ class PangaeaInstances
   
   def process_instance(instance)
     shard_id            =   instance.tags.select { |tag| tag.key.eql?("hmy:Shard") }&.first&.value
-    bls_key             =   instance.tags.select { |tag| tag.key.eql?("hmy:BLSPubKey") }&.first&.value
+    bls_public_key      =   instance.tags.select { |tag| tag.key.eql?("hmy:BLSPubKey") }&.first&.value
     
-    puts "Found instance: ID: #{instance.id}, type: #{instance.instance_lifecycle}, zone: #{instance.placement.availability_zone}, ip_address: #{instance.public_ip_address}, shard_id: #{shard_id}, bls_key: #{bls_key}"
+    puts "Found instance: ID: #{instance.id}, type: #{instance.instance_lifecycle}, zone: #{instance.placement.availability_zone}, ip address: #{instance.public_ip_address}, shard id: #{shard_id}, bls public key: #{bls_public_key}"
     
     if !instance.id.to_s.empty? && !instance.public_ip_address.to_s.empty? && !shard_id.to_s.empty?
+      bls_private_key   =   parse_private_key(shard_id: shard_id, bls_public_key: bls_public_key)
+      wallet_address    =   self.relations.fetch(bls_public_key, nil)
+      wallet_data       =   !wallet_address.to_s.empty? ? parse_wallet_data(shard_id: shard_id, address: wallet_address) : nil
+      
       self.data[instance.id]    =   {
-        id:         instance.id,
-        type:       instance.instance_lifecycle,
-        zone:       instance.placement.availability_zone,
-        ip_address: instance.public_ip_address,
-        shard_id:   shard_id,
-        bls_key:    bls_key
+        id:               instance.id,
+        type:             instance.instance_lifecycle,
+        zone:             instance.placement.availability_zone,
+        ip_address:       instance.public_ip_address,
+        shard_id:         shard_id,
+        bls_public_key:   bls_public_key,
+        bls_private_key:  bls_private_key,
+        wallet_address:   wallet_address,
+        wallet_data:      wallet_data
       }
     end
   end
   
+  def parse_private_key(shard_id:, bls_public_key:)
+    path            =   "#{self.paths[:bls] % shard_id.to_i}/#{bls_public_key}.key"
+    private_key     =   ::File.exists?(path) ? ::File.read(path) : nil
+  end
+  
+  def parse_wallet_data(shard_id:, address:)
+    path            =   "#{self.paths[:wallets] % shard_id.to_i}/#{address}.key"
+    wallet_data     =   ::File.exists?(path) ? ::File.read(path) : nil
+  end
+  
+  def parse_bls_wallet_relationships(path: 'https://raw.githubusercontent.com/harmony-one/harmony/master/internal/genesis/tn_harmony.go', regex: /\{Index: "(?<index>\d+)", Address: "(?<address>[^"]+)", BlsPublicKey: "(?<bls_public_key>[^"]+)"\}/i)
+    response        =   ::Net::HTTP.get(URI(path))
+    rows            =   response&.split("\n")
+    
+    rows&.each do |row|
+      matches       =   row.match(regex)
+      
+      if matches && matches.captures.any? && !matches[:address].to_s.empty? && !matches[:bls_public_key].to_s.empty?
+        self.relations[matches[:bls_public_key].to_s.strip]    =   matches[:address].to_s.strip
+      end
+    end
+  end
+  
   def export_to_csv(file_path: nil)
-    file_path   ||=   "#{File.dirname(__FILE__)}/pangaea_instances.csv"
+    file_path     ||=   "#{File.dirname(__FILE__)}/pangaea_instances.csv"
     FileUtils.rm_rf file_path
     
+    parse_bls_wallet_relationships
     fetch_instances
     
     CSV.open(file_path, "w") do |csv|
       csv     <<  self.headers
       
       self.data.each do |instance_id, instance|
+        pp instance
+        
         csv   <<   [
           instance[:id],
           instance[:type],
           instance[:zone],
           instance[:ip_address],
           instance[:shard_id],
-          instance[:bls_key]
+          "Internal",
+          instance[:bls_public_key],
+          instance[:bls_private_key],
+          instance[:wallet_address],
+          instance[:wallet_data]
         ]
       end
     end
