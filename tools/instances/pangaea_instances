@@ -48,10 +48,12 @@ class PangaeaInstances
       "Instance ID",
       "Instance Type",
       "Instance Lifecycle",
+      "Region",
       "Zone",
       "Ip Address",
       "Shard ID",
       "Operated By",
+      "Comment",
       "BLS Public Key",
       "BLS Private Key",
       "Wallet Address",
@@ -69,12 +71,12 @@ class PangaeaInstances
       results           =   ec2_resource.instances(filters: self.filters)
       
       results&.each do |instance|
-        process_instance(instance)
+        process_instance(instance, region: region)
       end
     end
   end
   
-  def process_instance(instance)
+  def process_instance(instance, region:)
     shard_id            =   instance.tags.select { |tag| tag.key.eql?("hmy:Shard") }&.first&.value
     bls_public_key      =   instance.tags.select { |tag| tag.key.eql?("hmy:BLSPubKey") }&.first&.value
     
@@ -84,16 +86,26 @@ class PangaeaInstances
       bls_private_key   =   parse_private_key(shard_id: shard_id, bls_public_key: bls_public_key)
       wallet_address    =   self.relations.fetch(bls_public_key, nil)
       wallet_data       =   !wallet_address.to_s.empty? ? parse_wallet_data(shard_id: shard_id, address: wallet_address) : nil
+      comment           =   nil
+      
+      self.data.each do |instance_id, other_instance|
+        if bls_public_key == other_instance[:bls_public_key]
+          comment       =   "Duplicate BLS key!\nAlready used by #{other_instance[:id]} / #{other_instance[:ip_address]}"
+          break
+        end
+      end
       
       self.data[instance.id]    =   {
         provider:         "AWS",
         id:               instance.id,
         type:             instance.instance_type,
         lifecycle:        instance.instance_lifecycle,
+        region:           region,
         zone:             instance.placement.availability_zone,
         ip_address:       instance.public_ip_address,
         shard_id:         shard_id,
         operated_by:      "Internal",
+        comment:          comment,
         bls_public_key:   bls_public_key,
         bls_private_key:  bls_private_key,
         wallet_address:   wallet_address,
@@ -141,10 +153,12 @@ class PangaeaInstances
           instance[:id],
           instance[:type],
           instance[:lifecycle],
+          instance[:region],
           instance[:zone],
           instance[:ip_address],
           instance[:shard_id],
           instance[:operated_by],
+          instance[:comment],
           instance[:bls_public_key],
           instance[:bls_private_key],
           instance[:wallet_address],
