@@ -3,42 +3,41 @@
 # Requires that Ruby is installed - optimally 2.6.5
 # Also requires that the aws-sdk-ec2 gem is installed -> gem install aws-sdk-ec2
 
-# Usage: ./pangaea_instances YOUR_MFA_PANGAEA_PROFILE
+# Usage: ./pangaea_instances YOUR_MFA_PANGAEA_PROFILE 2 (for shard id 2)
+# Usage: ./pangaea_instances YOUR_MFA_PANGAEA_PROFILE 0,1,2 (for shard ids 0, 1 and 2)
 
 require "aws-sdk-ec2"
 require "net/http"
 require "csv"
+require "set"
 
 profile                 =   !ARGV[0].to_s.empty? ? ARGV[0].strip : "seb_mfa_pangaea"
+shard_ids               =   !ARGV[1].to_s.empty? ? ARGV[1].strip.split(",").map(&:to_i) : [2]
 
 class PangaeaInstances
-  attr_accessor :profile, :ec2_client, :filters, :relations, :paths, :data, :headers
+  attr_accessor :profile
+  attr_accessor :ec2_client
+  attr_accessor :shard_ids, :bls_keys, :wallets, :relations, :paths
+  attr_accessor :data, :headers, :abnormalities
   
-  def initialize(profile:)
+  def initialize(profile:, shard_ids: nil)
     self.profile        =   profile
+    self.shard_ids      =   shard_ids ? shard_ids : (0..2).to_a
     
     self.ec2_client     =   Aws::EC2::Client.new(profile: self.profile)
     
-    self.filters        =   [
-      {
-        name: 'tag:Name',
-        values: ['Pangaea Node']
-      },
-      {
-        name: 'tag:hmy:Shard',
-        values: ['2']
-      }
-    ]
-    
+    self.bls_keys       =   {}
+    self.wallets        =   {}
     self.relations      =   {}
+    self.abnormalities  =   {unused: {}, duplicate: {}}
     
     # These paths refer to the expanded zip files provided by Eugene (shared on the P-OPS shared drive)
     # They are placed in the data folder relative to this script, so e.g. pangaea-ops/tools/instances/data
     # Wallets files are placed in pangaea-ops/tools/instances/data/acc
     # Bls files are placed in pangaea-ops/tools/instances/data/bls
     self.paths          =   {
-      wallets: "#{File.dirname(__FILE__)}/data/acc/pga-acc-s%d",
-      bls:     "#{File.dirname(__FILE__)}/data/bls/pga-bls-s%d"
+      wallets:  "#{File.dirname(__FILE__)}/data/acc/pga-acc-s%d",
+      bls_keys: "#{File.dirname(__FILE__)}/data/bls/pga-bls-s%d"
     }
     
     self.data           =   {}
@@ -66,9 +65,21 @@ class PangaeaInstances
   end
   
   def fetch_instances
+    filters        =   [
+      {
+        name: 'tag:Name',
+        values: ['Pangaea Node']
+      },
+      
+      {
+        name: 'tag:hmy:Shard',
+        values: self.shard_ids.map(&:to_s)
+      }
+    ]
+    
     regions.each do |region|
       ec2_resource      =   Aws::EC2::Resource.new(profile: self.profile, region: region)
-      results           =   ec2_resource.instances(filters: self.filters)
+      results           =   ec2_resource.instances(filters: filters)
       
       results&.each do |instance|
         process_instance(instance, region: region)
@@ -77,20 +88,22 @@ class PangaeaInstances
   end
   
   def process_instance(instance, region:)
-    shard_id            =   instance.tags.select { |tag| tag.key.eql?("hmy:Shard") }&.first&.value
+    shard_id            =   instance.tags.select { |tag| tag.key.eql?("hmy:Shard") }&.first&.value&.to_i
     bls_public_key      =   instance.tags.select { |tag| tag.key.eql?("hmy:BLSPubKey") }&.first&.value
     
     puts "Found instance: ID: #{instance.id}, type: #{instance.instance_type}, lifecycle: #{instance.instance_lifecycle}, zone: #{instance.placement.availability_zone}, ip address: #{instance.public_ip_address}, shard id: #{shard_id}, bls public key: #{bls_public_key}"
     
     if !instance.id.to_s.empty? && !instance.public_ip_address.to_s.empty? && !shard_id.to_s.empty?
-      bls_private_key   =   parse_private_key(shard_id: shard_id, bls_public_key: bls_public_key)
+      bls_private_key   =   self.bls_keys.dig(shard_id, bls_public_key)
       wallet_address    =   self.relations.fetch(bls_public_key, nil)
-      wallet_data       =   !wallet_address.to_s.empty? ? parse_wallet_data(shard_id: shard_id, address: wallet_address) : nil
+      wallet_data       =   !wallet_address.to_s.empty? ? self.wallets.dig(shard_id, wallet_address) : nil
       comment           =   nil
       
       self.data.each do |instance_id, other_instance|
         if bls_public_key == other_instance[:bls_public_key]
           comment       =   "Duplicate BLS key!\nAlready used by #{other_instance[:id]} / #{other_instance[:ip_address]}"
+          self.abnormalities[:duplicate][shard_id] ||= Set.new
+          self.abnormalities[:duplicate][shard_id].add(bls_public_key)
           break
         end
       end
@@ -114,14 +127,20 @@ class PangaeaInstances
     end
   end
   
-  def parse_private_key(shard_id:, bls_public_key:)
-    path            =   "#{self.paths[:bls] % shard_id.to_i}/#{bls_public_key}.key"
-    private_key     =   ::File.exists?(path) ? ::File.read(path) : nil
-  end
-  
-  def parse_wallet_data(shard_id:, address:)
-    path            =   "#{self.paths[:wallets] % shard_id.to_i}/#{address}.key"
-    wallet_data     =   ::File.exists?(path) ? ::File.read(path) : nil
+  def collect_keys
+    self.paths.keys.each do |type|
+      self.shard_ids.each do |shard_id|
+        pattern         =   "#{self.paths[type] % shard_id.to_i}/*.key"
+    
+        Dir.glob(pattern).each do |file|
+          value         =   ::File.exists?(file) ? ::File.read(file) : nil
+          key           =   File.basename(file, ".key")
+          self.send(type)[shard_id]       ||=  {}
+          self.send(type)[shard_id][key]  ||=  {}
+          self.send(type)[shard_id][key]    =  value
+        end
+      end
+    end
   end
   
   def parse_bls_wallet_relationships(path: 'https://raw.githubusercontent.com/harmony-one/harmony/master/internal/genesis/tn_harmony.go', regex: /\{Index: "(?<index>\d+)", Address: "(?<address>[^"]+)", BlsPublicKey: "(?<bls_public_key>[^"]+)"\}/i)
@@ -137,12 +156,37 @@ class PangaeaInstances
     end
   end
   
+  def check_for_unused_keys
+    self.shard_ids.each do |shard_id|
+      all_keys        =   Set.new
+      
+      self.bls_keys.fetch(shard_id).each do |public_key, private_key|
+        all_keys.add(public_key)
+      end
+      
+      used_keys       =   Set.new
+      
+      self.data.each do |instance_id, instance|
+        if instance[:shard_id].eql?(shard_id)
+          used_keys.add(instance[:bls_public_key])
+        end
+      end
+      
+      unused_keys     =   (all_keys.to_a - used_keys.to_a)
+      
+      self.abnormalities[:unused][shard_id] ||= unused_keys
+    end
+  end
+  
   def export_to_csv(file_path: nil)
-    file_path     ||=   "#{File.dirname(__FILE__)}/pangaea_instances.csv"
+    file_path     ||=   "#{File.dirname(__FILE__)}/export/csv/instances.csv"
+    FileUtils.mkdir_p File.dirname(file_path)
     FileUtils.rm_rf file_path
     
+    collect_keys    
     parse_bls_wallet_relationships
     fetch_instances
+    check_for_unused_keys
     
     CSV.open(file_path, "w") do |csv|
       csv     <<  self.headers
@@ -165,13 +209,67 @@ class PangaeaInstances
           instance[:wallet_data]
         ]
       end
+      
+      csv       =   export_csv_abnormalities(csv)
+      
     end
+    
+    info
   end
   
-  def self.export_to_csv(profile:, file_path: nil)
-    self.new(profile: profile).export_to_csv(file_path: file_path)
+  def export_csv_abnormalities(csv)
+    self.abnormalities.each do |type, shard_data|
+      if !shard_data.empty?
+        2.times do
+          csv       <<   ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+        end
+    
+        csv         <<   ["", "", "", "", "", "", "", "", "", "", "#{type.capitalize} BLS Keys:", "", "", ""]
+    
+        self.shard_ids.each do |shard_id|
+          items      =   shard_data.fetch(shard_id)
+        
+          csv       <<   ["", "", "", "", "", "", "", "", "", "", "Shard #{shard_id} (#{items.size} keys:)", "", "", ""]
+        
+          items.each do |item|
+            csv     <<   ["", "", "", "", "", "", "", "", "", "", item, "", "", ""]
+          end
+        
+          csv       <<   ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+        end
+        
+      end
+    end
+    
+    return csv
+  end
+  
+  def info
+    puts "\n\nFinished CSV export!"
+    
+    self.abnormalities.each do |type, shard_data|
+      if !shard_data.empty?
+        puts "\n\n#{"-"*10}"
+      
+        self.shard_ids.each do |shard_id|
+          items    =   shard_data.fetch(shard_id)
+        
+          puts "\nShard #{shard_id} - Found a total of #{items.size} #{type} BLS keys!"
+          puts "Shard #{shard_id} - The following BLS keys are #{type}:"
+        
+          items.each do |item|
+            puts item
+          end
+        end
+      end
+    end
+    
+  end
+  
+  def self.export_to_csv(profile:, shard_ids: nil, file_path: nil)
+    self.new(profile: profile, shard_ids: shard_ids).export_to_csv(file_path: file_path)
   end
   
 end
 
-PangaeaInstances.export_to_csv(profile: profile)
+PangaeaInstances.export_to_csv(profile: profile, shard_ids: shard_ids)
