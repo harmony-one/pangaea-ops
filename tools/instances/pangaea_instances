@@ -229,7 +229,7 @@ class PangaeaInstances
         self.shard_ids.each do |shard_id|
           items      =   shard_data.fetch(shard_id)
         
-          csv       <<   ["", "", "", "", "", "", "", "", "", "", "Shard #{shard_id} (#{items.size} keys:)", "", "", ""]
+          csv       <<   ["", "", "", "", "", "", "", "", "", "", "Shard #{shard_id} (#{items.size} keys):", "", "", ""]
         
           items.each do |item|
             csv     <<   ["", "", "", "", "", "", "", "", "", "", item, "", "", ""]
