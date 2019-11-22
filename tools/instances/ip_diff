@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+base                =   File.readlines("#{File.dirname(__FILE__)}/base_ips.txt")
+comparison          =   File.readlines("#{File.dirname(__FILE__)}/comparison_ips.txt")
+
+base_result         =   (base - comparison).uniq
+comparison_result   =   (comparison - base).uniq
+
+puts "\nThe following ip addresses are unique for the base sample:"
+base_result.each do |address|
+  puts address
+end
+
+puts "\nThe following ip addresses are unique for the comparison sample:"
+comparison_result.each do |address|
+  puts address
+end
