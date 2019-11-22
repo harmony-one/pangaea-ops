@@ -7,7 +7,7 @@ Options:
    --profile        profile     the aws cli profile to use
    --shard-id       shard id    the shard id to use for filtering instances
    --format         format      the export format. Available formats are json, text and table (defaults to json)
-   --ip-addresses               only export ip addresses - this overrides the --format parameter and also requires that jq is installed
+   --ip-addresses               only export ip addresses - requires that jq is installed in order to parse JSON
    --help                       print this help section
 EOT
 }
