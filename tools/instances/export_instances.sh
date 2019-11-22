@@ -66,7 +66,7 @@ set_variables() {
 check_aws_cli_dependency() {
   if ! command -v aws >/dev/null 2>&1; then
     echo "AWS CLI is required to run this script."
-    echo "Please install it using https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html or similar"
+    echo "Please install it using https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html or a similar installation procedure."
     exit 1
   fi
 }
