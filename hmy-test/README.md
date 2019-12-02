@@ -10,7 +10,10 @@ cd shunit2
 cp -R ../../pangaea-ops/hmy-test .
 
 
-executing basictest.sh : bash basictest.sh
+executing basictest.sh : 
+#requirement
+# jq, bc
+bash basictest.sh
 
 for staking-test.sh there are some pre-requisites which is to have your one wallet account imported (if not done already):
 Create a new wallet
