@@ -24,3 +24,4 @@ locate the keystore file and import it so hmy can use it in all the below comman
 ./hmy keys import-ks /root/.hmy/keystore/UTC--2019-11.....
 take note of your one address and update VALIDATOR_ADDR variable.
 ```
+
