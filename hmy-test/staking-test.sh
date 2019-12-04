@@ -17,7 +17,7 @@ HMYCLIPATH="../../../hmy"
 #this address need to be linked with the validator account
 VALIDATOR_ADDR=one15knq45tf5psjze6q65dpm4lumqhm8jny997mph
 #address not present in your local keystore ./hmy keys list
-NOT_PRESENT_VALIDATOR_ADDR=one16knq45tf5qncze6q65dpm1e4mqhm8jny998mph #address not imported
+NOT_PRESENT_VALIDATOR_ADDR=one143fyg8yu2pvxuq84qehwjtvlvxlpfvwe5z2y97 #address generated but not imported
 
 #the above account will be used to signed all the transaction related to validator creation
 
@@ -31,6 +31,7 @@ test_HMY_Validator_Creation_Invalid_signer_address_format() {
 }
 
 #create CreateValidator transaction signer should match the validator address present in the keystore ./hmy keys list
+Error: invalid argument "--name" for "--validator-addr" flag: The address you supplied (--name) is in an invalid format. Please provide a valid address.>
 test_HMY_Validator_Creation_Non_Present_signer_address() {
     output=$((${HMYCLIPATH} --node=http://localhost:9500 staking create-validator --validator-addr ${NOT_PRESENT_VALIDATOR_ADDR} --name John --identity john --website john@harmony.one --security-contact Alex --details "John the validator" --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys 0xb9486167ab9087ab818dc4ce026edb5bf216863364c32e42df2af03c5ced1ad181e7d12f0e6dd5307a73b62247608611 --amount 3 --chain-id pangaea) 2>&1)
     returncode=$?
