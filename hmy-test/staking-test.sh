@@ -16,8 +16,28 @@ HMYCLIPATH="../../../hmy"
 # ./hmy keys import-ks /root/.hmy/keystore/UTC--2019-11.....
 #this address need to be linked with the validator account
 VALIDATOR_ADDR=one15knq45tf5psjze6q65dpm4lumqhm8jny997mph
+#address not present in your local keystore ./hmy keys list
+NOT_PRESENT_VALIDATOR_ADDR=one16knq45tf5qncze6q65dpm1e4mqhm8jny998mph #address not imported
 
 #the above account will be used to signed all the transaction related to validator creation
+
+#create CreateValidator transaction signer with an invalid validator address format
+test_HMY_Validator_Creation_Invalid_signer_address_format() {
+    output=$((${HMYCLIPATH} --node=http://localhost:9500 staking create-validator --validator-addr onexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --name John --identity john --website john@harmony.one --security-contact Alex --details "John the validator" --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys 0xb9486167ab9087ab818dc4ce026edb5bf216863364c32e42df2af03c5ced1ad181e7d12f0e6dd5307a73b62247608611 --amount 3 --chain-id pangaea) 2>&1)
+    returncode=$?
+    assertEquals 'Testing error code of hmy Validator Create Invalid Signer address format which should be 1' "1" "${returncode}"
+    #assertEquals 'Testing Validator Create Invalid Signer address format' 'Error: invalid argument "onexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" for "--validator-addr" flag: The address you supplied (onexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx) is in an invalid format. Please provide a valid address.' "${output}"
+    assertContains 'Testing Validator Create Invalid Signer address format' "${output}" 'invalid format'  
+}
+
+#create CreateValidator transaction signer should match the validator address present in the keystore ./hmy keys list
+test_HMY_Validator_Creation_Non_Present_signer_address() {
+    output=$((${HMYCLIPATH} --node=http://localhost:9500 staking create-validator --validator-addr ${NOT_PRESENT_VALIDATOR_ADDR} --name John --identity john --website john@harmony.one --security-contact Alex --details "John the validator" --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys 0xb9486167ab9087ab818dc4ce026edb5bf216863364c32e42df2af03c5ced1ad181e7d12f0e6dd5307a73b62247608611 --amount 3 --chain-id pangaea) 2>&1)
+    returncode=$?
+    assertEquals 'Testing error code of hmy Validator Create Non Present Signer address which should be 1' "1" "${returncode}"
+    #assertEquals 'Testing Validator Create Non Present Signer address' "Error: could not open local keystore for ${NOT_PRESENT_VALIDATOR_ADDR}" "${output}"
+    assertContains 'Testing Validator Create Non Present Signer address' "${output}" 'could not open local keystore'  
+}
 
 #name lenght above 70 chars should return an error message containing the string : Exceed Maximum Length name 70
 test_HMY_Validator_Creation_Name_lenght() {
