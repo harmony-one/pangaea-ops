@@ -1,0 +1,2 @@
+pkill harmony || :
+rm -rf .dht-* || :
