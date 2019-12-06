@@ -1,0 +1,12 @@
+(
+	tac latest/zerolog-validator-127.0.0.1-9000.log
+	zcat $(ls -1t latest/zerolog-validator-127.0.0.1-9000-*.log.gz)
+) | egrep -m 1 \
+	-e 'numPeersNow' \
+	-e '\[bootstrap\]' \
+	-e 'HOORAY' \
+	-e 'BINGO' \
+	-e 'PROPOSING' \
+	-e 'Timeout' \
+	-e 'NewView' \
+	-e 'startViewChange' \
