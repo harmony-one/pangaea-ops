@@ -1,0 +1,3 @@
+tac latest/zerolog-validator-127.0.0.1-9000.log
+set -- $(ls -1t latest/zerolog-validator-127.0.0.1-9000-*.log.gz 2> /dev/null)
+case $# in [1-9]*) zcat "$@";; esac
