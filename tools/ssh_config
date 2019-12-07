@@ -1,8 +1,8 @@
-UserKnownHostsFile known_hosts
+UserKnownHostsFile /data/pangaea-ops/known_hosts
 GlobalKnownHostsFile /dev/null
 StrictHostKeyChecking no
 CheckHostIP yes
 ControlPath ~/.ssh/ctl/%r@%h[%p]
 ControlMaster auto
 ControlPersist yes
-IdentityFile pangaea.pem
+IdentityFile /data/pangaea-ops/pangaea.pem
