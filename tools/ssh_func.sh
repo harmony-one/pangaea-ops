@@ -1,2 +1,2 @@
-PSSH() { pssh -p 300 -x '-F/data/pangaea-ops/tools/ssh_config' -x '-i/data/pangaea-ops/pangaea.pem' -O 'StrictHostKeyChecking=no' -O 'CheckHostIP=yes' -O 'UserKnownHostsFile=/data/pangaea-ops/known_hosts' -O 'GlobalKnownHostsFile=/dev/null' "$@"; }
-SSH() { ssh -F /data/pangaea-ops/tools/ssh_config -i/data/pangaea-ops/pangaea.pem -o StrictHostKeyChecking=no -o CheckHostIP=yes -o UserKnownHostsFile=/data/pangaea-ops/known_hosts -o GlobalKnownHostsFile=/dev/null "$@"; }
+PSSH() { pssh -p 300 -x '-F/data/pangaea-ops/tools/ssh_config' "$@"; }
+SSH() { ssh -F /data/pangaea-ops/tools/ssh_config "$@"; }
