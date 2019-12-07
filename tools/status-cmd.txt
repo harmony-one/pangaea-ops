@@ -1,6 +1,6 @@
 (
 	tac latest/zerolog-validator-127.0.0.1-9000.log
-	zcat $(ls -1t latest/zerolog-validator-127.0.0.1-9000-*.log.gz 2> /dev/null)
+	zcat < /dev/null $(ls -1t latest/zerolog-validator-127.0.0.1-9000-*.log.gz 2> /dev/null)
 ) | egrep -m 1 \
 	-e 'numPeersNow' \
 	-e '\[bootstrap\]' \
