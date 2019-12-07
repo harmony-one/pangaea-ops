@@ -6,6 +6,6 @@ fi
 aws s3 sync --profile=downloader --quiet --exact-timestamps s3://unique-bucket-bin/PANGAEA/ ./
 for f in harmony bootnode wallet staking-standalone
 do
-	[ -f "${f}" || continue
+	[ -f "${f}" ] || continue
 	chmod a+x "${f}"
 done
