@@ -4,11 +4,8 @@ How to perform test:
 in the same folder as node.sh and hmy binary
 
 git clone https://github.com/harmony-one/pangaea-ops.git
-mkdir test
-cd test
 git clone https://github.com/kward/shunit2.git
-cd shunit2
-cp -R ../../pangaea-ops/hmy-test .
+cd pangaea-ops/hmy-test
 
 executing basictest.sh : 
 requirement

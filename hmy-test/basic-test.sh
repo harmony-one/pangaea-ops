@@ -4,11 +4,11 @@
 #requirement
 # jq, bc
 
-#path to shnit2:
-SHUNITPATH="../shunit2"
+#path to shunit2:
+SHUNITPATH="../../shunit2/shunit2"
 
 #path to hmy binary
-HMYCLIPATH="../../../hmy" 
+HMYCLI_ABSOLUTE_FOLDER="/root/hmy-devnet"
 
 
 test_HMY_version() {

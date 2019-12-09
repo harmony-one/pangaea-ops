@@ -1,11 +1,11 @@
 #!/bin/bash
 # Author: P-OPS soph 
 
-#path to shnit2:
-SHUNITPATH="../shunit2"
+#path to shunit2:
+SHUNITPATH="../../shunit2/shunit2"
 
 #path to hmy binary
-HMYCLIPATH="../../../hmy" 
+HMYCLI_ABSOLUTE_FOLDER="/root/hmy-devnet"
 
 #chain-id this test file is supposed run against
 #available chain-id
@@ -14,7 +14,7 @@ HMYCLIPATH="../../../hmy"
 #  "testnet", ==> pangaea/testnet
 #  "devnet" ==> devnet
 #]
-chainid="testnet"
+chainid="devnet"
 
 #api endpoints
 #Pangaea: --node=https://api.s0.p.hmny.io
@@ -34,6 +34,12 @@ NOT_PRESENT_VALIDATOR_ADDR="one143fyg8yu2pvxuq84qehwjtvlvxlpfvwe5z2y97" #address
 #or when the private bls key file is recovered : ./hmy keys recover-bls-key /root/b3727f8a497174dba2d4859a131a79f4065fa8d18b5e51e5624bc7dcc1e39ae25b0eb5a0b9a4b25a49c9ee3d3ebf7804.key
 BLS_PUBKEY="0xd014bf60687d3ac4b1a1886208b159a31f0022f49d4a18e87593e4dc3d48d16b"
 BLS_PASSPHRASE=""
+
+
+#test needs run in the same folder as the bls.key file
+oneTimeSetUp() {
+  cd ${HMYCLI_ABSOLUTE_FOLDER}
+}
 
 #create CreateValidator transaction signer with an invalid validator address format
 test_HMY_Validator_Creation_Invalid_signer_address_format() {
