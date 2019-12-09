@@ -31,7 +31,7 @@ test_HMY_Known_Chain() {
   output=$(${HMYCLIPATH} blockchain known-chains --no-pretty)
   returncode=$?
   assertEquals 'Testing error code of hmy known chain test which should be 0' "0" "${returncode}"
-  assertEquals '["mainnet","testnet","pangaea"]' "${output}"
+  assertEquals '["mainnet","testnet","devnet"]' "${output}"
 }
 
 # Load and run shUnit2.
