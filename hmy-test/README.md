@@ -3,7 +3,7 @@
 How to perform test:
 in the same folder as node.sh and hmy binary
 
-https://github.com/harmony-one/pangaea-ops.git
+git clone https://github.com/harmony-one/pangaea-ops.git
 mkdir test
 cd test
 git clone https://github.com/kward/shunit2.git
