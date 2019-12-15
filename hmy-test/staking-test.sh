@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: P-OPS soph 
 
-source config.sh
+source $(dirname "$0")/config.sh
 
 # and import it so hmy can use it in all the below command
 # ./hmy keys import-ks /root/.hmy/keystore/UTC--2019-11.....

@@ -4,7 +4,7 @@
 #requirement
 # jq, bc
 
-source config.sh
+source $(dirname "$0")/config.sh
 
 #test needs run in the same folder as the bls.key file
 oneTimeSetUp() {
