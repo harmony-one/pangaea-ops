@@ -235,7 +235,7 @@ test_HMY_Validator_Creation_min_self_delegation_greater_than_1() {
 
 #max-total-delegation cannot be less than min-self-delegation
 test_HMY_Validator_Creation_max_total_delegation_greater_than_min_self_delgation() {
-    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 10 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 10 --bls-pubkeys ${BLS_PUBKEY} --amount 15 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
     returncode=$?
@@ -246,7 +246,7 @@ test_HMY_Validator_Creation_max_total_delegation_greater_than_min_self_delgation
     echo 
 }
 # test_HMY_Validator_Edit_max_total_delegation_greater_than_min_self_delgation() {
-#     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --min-self-delegation 20 --max-total-delegation 20 --remove-bls-key ${BLS_PUBKEY} --add-bls-key ${BLS_PUBKEY} --chain-id ${chainid}"
+#     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --min-self-delegation 20 --max-total-delegation 10 --remove-bls-key ${BLS_PUBKEY} --add-bls-key ${BLS_PUBKEY} --chain-id ${chainid}"
 #     echo "command executed : ${test_cmd}"
 #     output=$((eval "${test_cmd}") 2>&1)
 #     returncode=$?
@@ -258,6 +258,82 @@ test_HMY_Validator_Creation_max_total_delegation_greater_than_min_self_delgation
 #     echo
 #     echo 
 # }
+
+#amount_below_min_self_delegation
+test_HMY_Validator_Creation_amount_below_min_self_delegation() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 10 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of Create HMY_Validator_Creation_amount_below_min_self_delegation should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Create HMY_Validator_Creation_amount_below_min_self_delegation' "${output}" 'amount value should be between min_self_delegation and max_total_delegation'
+    echo
+    echo 
+}
+#amount can't be edited since this represent the self delegation amount we are putting during the creation. Subsequent self delegation, should be done via the delegation staking action
+
+
+
+
+
+
+#amount_above_max_total_delegation
+test_HMY_Validator_Creation_amount_above_total_max_delegation() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 40 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of Create HMY_Validator_Creation_amount_above_total_max_delegation should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Create HMY_Validator_Creation_amount_above_total_max_delegation' "${output}" 'amount value should be between min_self_delegation and max_total_delegation'
+    echo
+    echo 
+}
+#amount can't be edited since this represent the self delegation amount we are putting during the creation. Subsequent self delegation, should be done via the delegation staking action
+
+
+
+
+#rate_above_1
+test_HMY_Validator_Creation_rate_above_1() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 1.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 25 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of Create HMY_Validator_Creation_rate_above_1 should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Create HMY_Validator_Creation_rate_above_1' "${output}" 'commission rate, change rate, and max rate should be within 0-100 percent'
+    echo
+    echo 
+}
+
+#max_rate_above_1
+test_HMY_Validator_Creation_max_rate_above_1() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 1.1 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 25 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of Create HMY_Validator_Creation_max_rate_above_1 should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Create HMY_Validator_Creation_max_rate_above_1' "${output}" 'commission rate, change rate, and max rate should be within 0-100 percent'
+    echo
+    echo 
+}
+
+#max_change_rate_above_1
+test_HMY_Validator_Creation_max_change_rate_above_1() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=http://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 1.1 --min-self-delegation 20 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 25 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of Create HMY_Validator_Creation_max_change_rate_above_1 should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Create HMY_Validator_Creation_max_change_rate_above_1' "${output}" 'commission rate, change rate, and max rate should be within 0-100 percent'
+    echo
+    echo 
+}
+
 
 # Load and run shUnit2.
 [ -n "${ZSH_VERSION:-}" ] && SHUNIT_PARENT=$0
