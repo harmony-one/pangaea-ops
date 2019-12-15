@@ -11,6 +11,11 @@ SHUNITPATH="../../shunit2/shunit2"
 HMYCLI_ABSOLUTE_FOLDER="/root/hmy-devnet"
 HMYCLIBIN="hmy"
 
+#test needs run in the same folder as the bls.key file
+oneTimeSetUp() {
+  cd ${HMYCLI_ABSOLUTE_FOLDER}
+}
+
 test_HMY_version() {
   #note the current hmy version v138 shows the version in the stderr
   output=$((${HMYCLIBIN} version) 2>&1)
