@@ -4,12 +4,7 @@
 #requirement
 # jq, bc
 
-#path to shunit2:
-SHUNITPATH="../../shunit2/shunit2"
-
-#path to hmy binary
-HMYCLI_ABSOLUTE_FOLDER="/root/hmy-devnet"
-HMYCLIBIN="hmy"
+source $(dirname "$0")/config.sh
 
 #test needs run in the same folder as the bls.key file
 oneTimeSetUp() {
@@ -21,8 +16,8 @@ test_HMY_version() {
   output=$((${HMYCLIBIN} version) 2>&1)
   returncode=$?
   assertEquals 'Testing error code of hmy version which should be 0' "0" "${returncode}"
-  assertContains 'Testing hmy version' "${output}" 'v138-3ef3b5c'
-  #assertEquals 'Harmony (C) 2019. hmy, version v138-3ef3b5c (@harmony.one 2019-11-26T22:27:26-0800)' "${output}"
+  assertContains 'Testing hmy version' "${output}" 'v179-f4cf946'
+  #assertEquals 'Harmony (C) 2019. hmy, version v179-f4cf946 (@harmony.one 2019-11-26T22:27:26-0800)' "${output}"
 }
 
 test_HMY_Check_Balance() {

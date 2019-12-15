@@ -3,14 +3,15 @@
 How to perform test:
 in the same folder as node.sh and hmy binary
 
+apt-get install -y jq bc
 git clone https://github.com/harmony-one/pangaea-ops.git
 git clone https://github.com/kward/shunit2.git
-cd pangaea-ops/hmy-test
 
-executing basictest.sh : 
-requirement
-jq, bc
-bash basictest.sh
+update pangaea-ops/hmy-test/config.sh
+
+bash pangaea-ops/hmy-test/basictest.sh
+
+bash pangaea-ops/hmy-test/staking-test.sh
 
 for staking-test.sh there are some pre-requisites which is to have your one wallet account imported (if not done already):
 
