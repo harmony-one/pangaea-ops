@@ -16,12 +16,12 @@ test_HMY_version() {
   output=$((${HMYCLIBIN} version) 2>&1)
   returncode=$?
   assertEquals 'Testing error code of hmy version which should be 0' "0" "${returncode}"
-  assertContains 'Testing hmy version' "${output}" 'v179-f4cf946'
+  assertContains 'Testing hmy version' "${output}" '${HMYCLIVERSION}'
   #assertEquals 'Harmony (C) 2019. hmy, version v179-f4cf946 (@harmony.one 2019-11-26T22:27:26-0800)' "${output}"
 }
 
 test_HMY_Check_Balance() {
-  output=$(${HMYCLIBIN} --node="https://api.s1.b.hmny.io/" balances one1yc06ghr2p8xnl2380kpfayweguuhxdtupkhqzw | jq ".[0].amount")
+  output=$(${HMYCLIBIN} --node="https://${apiendpoint}" balances one1yc06ghr2p8xnl2380kpfayweguuhxdtupkhqzw | jq ".[0].amount")
   returncode=$?
   assertEquals 'Testing error code of hmy balance check which should be 0' "0" "${returncode}"
   assertEquals "testing balance above 0 for one1yc06ghr2p8xnl2380kpfayweguuhxdtupkhqzw in pangaea" "1" "$(echo "${output} > 0" | bc -l)"
