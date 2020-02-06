@@ -8,7 +8,7 @@ SHUNITPATH=${HARMONYPATH}"shunit2/shunit2"
 HMYCLI_ABSOLUTE_FOLDER=${HARMONYPATH}
 HMYCLIBIN="./hmy"
 # hmy cli version
-HMYCLIVERSION="v179-f4cf946"
+HMYCLIVERSION="v246-c28ff50"
 
 #chain-id this test file is supposed run against
 #available chain-id
@@ -17,17 +17,17 @@ HMYCLIVERSION="v179-f4cf946"
 #  "testnet", ==> pangaea/testnet
 #  "devnet" ==> devnet
 #]
-chainid="devnet"
+chainid="testnet"
 
 #api endpoints
 #mainnet: --node=https://api.s0.t.hmny.io
 #Pangaea: --node=https://api.s0.p.hmny.io
 #Devnet: --node=https://api.s0.pga.hmny.io
-apiendpoint="localhost:9500"
+apiendpoint="api.s0.os.hmny.io"
 
 
 #this address need to be imported to the keystore
-VALIDATOR_ADDR="one15knq45tf5psjze6q65dpm4lumqhm8jny997mph"
+VALIDATOR_ADDR="one1u6c4wer2dkm767hmjeehnwu6tqqur62gx9vqsd"
 #address not present in your local keystore ./hmy keys list
 NOT_PRESENT_VALIDATOR_ADDR="one143fyg8yu2pvxuq84qehwjtvlvxlpfvwe5z2y97" #address generated but not imported
 #the above account will be used to signed all the transaction related to validator creation
