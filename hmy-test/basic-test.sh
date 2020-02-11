@@ -16,7 +16,7 @@ test_HMY_version() {
   output=$((${HMYCLIBIN} version) 2>&1)
   returncode=$?
   assertEquals 'Testing error code of hmy version which should be 0' "0" "${returncode}"
-  assertContains 'Testing hmy version' "${output}" '${HMYCLIVERSION}'
+  assertContains 'Testing hmy version' "${output}" "${HMYCLIVERSION}"
   #assertEquals 'Harmony (C) 2019. hmy, version v179-f4cf946 (@harmony.one 2019-11-26T22:27:26-0800)' "${output}"
 }
 

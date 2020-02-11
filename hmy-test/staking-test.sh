@@ -3,9 +3,7 @@
 
 source $(dirname "$0")/config.sh
 
-#BLS_PUBKEY can be obtain when BLS is generated : ./hmy keys generate-bls-key
-#or when the private bls key file is recovered : ./hmy keys recover-bls-key /root/b3727f8a497174dba2d4859a131a79f4065fa8d18b5e51e5624bc7dcc1e39ae25b0eb5a0b9a4b25a49c9ee3d3ebf7804.key
-BLS_PUBKEY="0xb3727f8a497174dba2d4859a131a79f4065fa8d18b5e51e5624bc7dcc1e39ae25b0eb5a0b9a4b25a49c9ee3d3ebf7804"
+
 BLS_PASSPHRASE=""
 
 
@@ -22,8 +20,7 @@ test_HMY_Validator_Creation_Invalid_signer_address_format() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create Invalid Signer address format which should be 1' "1" "${returncode}"
-    #assertEquals 'Testing Validator Create Invalid Signer address format' 'Error: invalid argument "onexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" for "--validator-addr" flag: The address you supplied (onexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx) is in an invalid format. Please provide a valid address.' "${output}"
-    assertContains 'Testing Validator Create Invalid Signer address format' "${output}" 'invalid format' 
+    assertContains 'Testing Validator Create Invalid Signer address format' "${output}" 'not valid' 
     echo
     echo 
 }

@@ -26,8 +26,12 @@ chainid="testnet"
 apiendpoint="api.s0.os.hmny.io"
 
 
-#this address need to be imported to the keystore
+#validator address to be imported in the keystore
 VALIDATOR_ADDR="one1u6c4wer2dkm767hmjeehnwu6tqqur62gx9vqsd"
+
 #address not present in your local keystore ./hmy keys list
 NOT_PRESENT_VALIDATOR_ADDR="one143fyg8yu2pvxuq84qehwjtvlvxlpfvwe5z2y97" #address generated but not imported
 #the above account will be used to signed all the transaction related to validator creation
+
+#BLS KEY associate with the validator
+BLS_PUBKEY="7a43b05c6a2d9ba06bafdc22c4ef48a0e414775ab5b73de3fa34f8537260e8e82a70676326f2b4e8e9af086de36f1018"

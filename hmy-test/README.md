@@ -34,7 +34,7 @@ in pangaea-ops/hmy-test/config.sh
 ## Execute the test
 
 ```bash
-bash pangaea-ops/hmy-test/basictest.sh
+bash pangaea-ops/hmy-test/basic-test.sh
 or
 bash pangaea-ops/hmy-test/staking-test.sh
 ```
