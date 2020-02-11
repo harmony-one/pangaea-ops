@@ -1,5 +1,5 @@
 # absolute path of the harmony folder
-HARMONYPATH="/root/hmy-devnet/"
+HARMONYPATH="/root/harmony/"
 
 # path to shunit2:
 SHUNITPATH=${HARMONYPATH}"shunit2/shunit2"
@@ -8,7 +8,7 @@ SHUNITPATH=${HARMONYPATH}"shunit2/shunit2"
 HMYCLI_ABSOLUTE_FOLDER=${HARMONYPATH}
 HMYCLIBIN="./hmy"
 # hmy cli version
-HMYCLIVERSION="v246-c28ff50"
+HMYCLIVERSION="v265-7782446"
 
 #chain-id this test file is supposed run against
 #available chain-id
