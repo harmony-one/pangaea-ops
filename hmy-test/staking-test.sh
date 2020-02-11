@@ -24,7 +24,17 @@ test_HMY_Validator_Creation_Invalid_signer_address_format() {
     echo
     echo 
 }
-#TBD : add the staking edit with invalid signer address
+test_HMY_Validator_Edit_Invalid_signer_address_format() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr onexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --name John2 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Create Invalid Signer address format which should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Edit Invalid Signer address format' "${output}" 'not valid' 
+    echo
+    echo 
+}
 
 #create CreateValidator transaction signer should match the validator address present in the keystore ./hmy keys list
 test_HMY_Validator_Creation_Non_Present_signer_address() {
@@ -38,9 +48,17 @@ test_HMY_Validator_Creation_Non_Present_signer_address() {
     echo
     echo 
 }
-#TBD : add the staking edit Non_Present_signer_address
-
-
+test_HMY_Validator_Edit_Non_Present_signer_address() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${NOT_PRESENT_VALIDATOR_ADDR} --name John2  --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Create Non Present Signer address which should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Edit Non Present Signer address' "${output}" 'could not open local keystore'  
+    echo
+    echo 
+}
 
 #name lenght above 70 chars should return an error message containing the string : Exceed Maximum Length name 70
 test_HMY_Validator_Creation_Name_lenght() {
@@ -75,8 +93,7 @@ test_HMY_Validator_Creation_Identity_lenght() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create Identity lenght test which should be 1' "1" "${returncode}"
-    #assertEquals 'Testing Validator Create Identity lenght test above 3000' "Exceed Maximum Length identity 3000" "${output}"
-    assertContains 'Testing Validator Create Identity lenght test above 280' "${output}" 'exceeds maximum length of 280 characters'
+    assertContains 'Testing Validator Edit Identity lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
     echo
     echo 
 }
@@ -87,15 +104,10 @@ test_HMY_Validator_Edit_Identity_lenght() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create Identity lenght test which should be 1' "1" "${returncode}"
-    #assertEquals 'Testing Validator Create Identity lenght test above 3000' "Exceed Maximum Length identity 3000" "${output}"
-    assertContains 'Testing Validator Create Identity lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
+    assertContains 'Testing Validator Edit Identity lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
     echo
     echo 
 }
-
-
-
-
 
 #Website Lenghts above 140 chars should return an error message containing the string : Exceed Maximum Length website 140
 test_HMY_Validator_Creation_Website_lenght() {
@@ -105,7 +117,6 @@ test_HMY_Validator_Creation_Website_lenght() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create Website lenght test which should be 1' "1" "${returncode}"
-    #assertEquals 'Testing Validator Create Website lenght test above 140' "Exceed Maximum Length website 140" "${output}"
     assertContains 'Testing Validator Create Website lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
     echo
     echo 
@@ -117,8 +128,7 @@ test_HMY_Validator_Edit_Website_lenght() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create Website lenght test which should be 1' "1" "${returncode}"
-    #assertEquals 'Testing Validator Create Website lenght test above 140' "Exceed Maximum Length website 140" "${output}"
-    assertContains 'Testing Validator Create Website lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
+    assertContains 'Testing Validator Edit Website lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
     echo
     echo 
 };
@@ -135,7 +145,6 @@ test_HMY_Validator_Creation_SecurityContact_lenght() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create SecurityContact lenght test which should be 1' "1" "${returncode}"
-    #assertEquals 'Testing Validator Create WebSecurityContactsite lenght test above 140' "Exceed Maximum Length security-contact 140" "${output}"
     assertContains 'Testing Validator Create Security Contact lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
     echo
     echo 
@@ -147,7 +156,7 @@ test_HMY_Validator_Edit_SecurityContact_lenght() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create SecurityContact lenght test which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create Security Contact lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
+    assertContains 'Testing Validator Edit Security Contact lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
     echo
     echo 
 }
@@ -168,13 +177,13 @@ test_HMY_Validator_Creation_Detail_lenght() {
     echo 
 }
 test_HMY_Validator_Edit_Detail_lenght() {
-    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --details 'John the validator gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5PgjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P' --chain-id ${chainid}"
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --details 'John the validator gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5PgjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P' --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create detail lenght test which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create detail lenght test above 280' "${output}" 'exceeds maximum length of 280 characters'
+    assertContains 'Testing Validator Edit detail lenght test above 280' "${output}" 'exceeds maximum length of 280 characters'
     echo
     echo 
 }
@@ -189,26 +198,21 @@ test_HMY_Validator_Creation_min_self_delegation_greater_than_1() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create min self delegation test which should be 1' "1" "${returncode}"
-    #Need to ask Harmony what is the expected error
-    #assertEquals 'Testing Validator Create -min-self-delegation 0 (shoul be greater than 1)' "Exceed Maximum Length details 280" "${output}"
     assertContains 'Testing Validator Create -min-self-delegation 0 (should be greater than 1)' "${output}" 'min-self-delegation can not be less than 1 ONE'
     echo
     echo 
 }
-# test_HMY_Validator_Edit_min_self_delegation_greater_than_1() {
-#     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --min-self-delegation 0 --max-total-delegation 30 --remove-bls-key ${BLS_PUBKEY} --add-bls-key ${BLS_PUBKEY} --chain-id ${chainid}"
-#     echo "command executed : ${test_cmd}"
-#     output=$((eval "${test_cmd}") 2>&1)
-#     returncode=$?
-#     echo "command output : ${output}"
-#     assertEquals 'Testing error code of hmy Validator Edit min self delegation test which should be 1' "1" "${returncode}"
-#     #Need to ask Harmony what is the expected error
-#     #assertEquals 'Testing Validator Edit -min-self-delegation 0 (shoul be greater than 1)' "Exceed Maximum Length details 280" "${output}"
-#     assertContains 'Testing Validator Edit -min-self-delegation 0 (shoul be greater than 1)' "${output}" 'min_self_delegation has to be greater than 1 ONE'
-#     echo
-#     echo 
-# }
-
+test_HMY_Validator_Edit_min_self_delegation_greater_than_1() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --min-self-delegation 0 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Create min self delegation test which should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Edit -min-self-delegation 0 (should be greater than 1)' "${output}" 'min-self-delegation can not be less than 1 ONE'
+    echo
+    echo 
+}
 
 #max-total-delegation cannot be less than min-self-delegation
 test_HMY_Validator_Creation_max_total_delegation_greater_than_min_self_delgation() {
