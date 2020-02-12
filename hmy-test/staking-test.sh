@@ -200,7 +200,7 @@ test_HMY_Validator_Creation_commrate_above_maxrate() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create commission rate > max rate which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create commission rate > max rate' "${output}" 'commission rate and change rate can not be larger than max commission rate'
+    assertContains 'Testing Validator Create commission rate > max rate' "${output}" 'error: rate can not be greater than max-commission-rate'
     echo
     echo     
 }
