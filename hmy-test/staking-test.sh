@@ -459,6 +459,18 @@ test_HMY_Validator_Creation_max_change_rate_above_1() {
     echo 
 }
 
+#CV41	no bls key specified
+test_HMY_Validator_Creation_no_bls_key_specified() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity john --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys --amount 3 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Create no bls key specified which should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Create no bls key specified' "${output}" 'error'  
+    echo
+    echo 
+}
 
 # Load and run shUnit2.
 [ -n "${ZSH_VERSION:-}" ] && SHUNIT_PARENT=$0
