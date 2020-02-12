@@ -392,6 +392,19 @@ test_HMY_Validator_Creation_MinSelfDelegation_not_specified() {
     echo 
 }
 
+#CV35	MinSelfDelegation < 0
+test_HMY_Validator_Creation_MinSelfDelegation_below_0() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation -1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Create MinSelfDelegation < 0 which should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Create MinSelfDelegation < 0' "${output}" 'error'
+    echo
+    echo 
+}
+
 #CV26
 #rate_above_1
 test_HMY_Validator_Creation_rate_above_1() {
