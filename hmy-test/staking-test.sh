@@ -213,7 +213,7 @@ test_HMY_Validator_Creation_maxchangerate_above_maxrate() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create change rate > max rate which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create change rate > max rate' "${output}" 'commission rate and change rate can not be larger than max commission rate'
+    assertContains 'Testing Validator Create change rate > max rate' "${output}" 'error: max-change-rate can not be greater than max-commission-rate'
     echo
     echo     
 }
@@ -226,7 +226,7 @@ test_HMY_Validator_Creation_commrate_below_0() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create commission rate < 0 which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create commission rate < 0' "${output}" 'failure'
+    assertContains 'Testing Validator Create commission rate < 0' "${output}" 'error: rate can not be less than 0'
     echo
     echo     
 }
@@ -239,7 +239,7 @@ test_HMY_Validator_Creation_maxrate_below_0() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create max rate < 0 which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create max rate < 0' "${output}" 'failure'
+    assertContains 'Testing Validator Create max rate < 0' "${output}" 'error: max-commission-rate can not be less than 0'
     echo
     echo     
 }
@@ -252,7 +252,7 @@ test_HMY_Validator_Creation_maxchangerate_below_0() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create max change rate < 0 which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create max change rate < 0' "${output}" 'failure'
+    assertContains 'Testing Validator Create max change rate < 0' "${output}" 'error: max-change-rate can not be less than 0'
     echo
     echo     
 }
@@ -265,7 +265,7 @@ test_HMY_Validator_Creation_commrate_above_1() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create commission rate > 1 which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create commission rate > 1' "${output}" 'failure'
+    assertContains 'Testing Validator Create commission rate > 1' "${output}" 'error: rate can not be greater than 1'
     echo
     echo     
 }
@@ -278,7 +278,7 @@ test_HMY_Validator_Creation_maxrate_above_1() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create max rate > 1 which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create max rate > 1' "${output}" 'failure'
+    assertContains 'Testing Validator Create max rate > 1' "${output}" 'error: max-commission-rate can not be greater than 1'
     echo
     echo     
 }
@@ -291,7 +291,7 @@ test_HMY_Validator_Creation_maxchangerate_above_1() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create max change rate > 1 which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create max change rate > 1' "${output}" 'failure'
+    assertContains 'Testing Validator Create max change rate > 1' "${output}" 'error: max-change-rate can not be greater than 1'
     echo
     echo     
 }
