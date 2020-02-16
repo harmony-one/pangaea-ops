@@ -1,0 +1,11 @@
+if pid=$(pgrep harmony)
+then
+	echo "harmony is still running! (pid "${pid}")" >&2
+	exit 1
+fi
+aws s3 sync --profile=downloader --quiet --exact-timestamps s3://unique-bucket-bin/PANGAEA/ ./
+for f in harmony bootnode wallet staking-standalone
+do
+	[ -f "${f}" ] || continue
+	chmod a+x "${f}"
+done

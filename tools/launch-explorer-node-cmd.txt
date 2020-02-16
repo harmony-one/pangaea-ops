@@ -18,7 +18,7 @@ LD_LIBRARY_PATH=. ./harmony \
 	-dns_zone=p.hmny.io \
 	-public_rpc \
 	-node_type=explorer \
-	-shard_id=$(jqi .\"hmy:Shard\") \
+	-shard_id=$(cat shard-id.txt) \
 	> latest/harmony.out \
 	2> latest/harmony.err &
 echo $! > latest/harmony.pid

@@ -1,0 +1,3 @@
+pkill harmony || :
+sleep 2       || :
+rm -rf .dht-* || :

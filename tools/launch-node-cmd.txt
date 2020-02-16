@@ -4,6 +4,11 @@ if [ -d latest -a ! -L latest ]
 then
 	mv latest logs/old
 fi
+if pid=$(cat latest/harmony.pid 2> /dev/null) && ps p${pid} > /dev/null 2>&1
+then
+	echo "harmony already running (pid ${pid})" >&2
+	exit 1
+fi
 unset -v ts
 ts=$(date +%Y-%m-%dT%H:%M:%SZ)
 mkdir "logs/${ts}"
@@ -17,6 +22,7 @@ LD_LIBRARY_PATH=. ./harmony \
 	-network_type=testnet \
 	-dns_zone=p.hmny.io \
 	-public_rpc \
+	-block_period=1 \
 	> latest/harmony.out \
 	2> latest/harmony.err &
 echo $! > latest/harmony.pid

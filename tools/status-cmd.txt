@@ -1,0 +1,13 @@
+(
+	tac latest/zerolog-validator-127.0.0.1-9000.log
+	set -- $(ls -1t latest/zerolog-validator-127.0.0.1-9000-*.log.gz 2> /dev/null)
+	case $# in [1-9]*) zcat "$@";; esac
+) | egrep -m 1 \
+	-e 'numPeersNow' \
+	-e '\[bootstrap\]' \
+	-e 'HOORAY' \
+	-e 'BINGO' \
+	-e 'PROPOSING' \
+	-e 'Timeout' \
+	-e 'NewView' \
+	-e 'startViewChange' \
