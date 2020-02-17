@@ -105,7 +105,7 @@ test_HMY_Validator_Edit_Name_lenght() {
 
 #CV5
 #Identity Lenghts above 140 chars should return an error message containing the string : Exceed Maximum Length identity 3000
-test_HMY_Validator_Creation_Identity_lenght() {
+test_CV5_HMY_Validator_Creation_Identity_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John_d8RrBmktWjGhFuPdh5sr5parrcedikvMtVCMiYl712eiuZqIh0Sg4PD5N7Z5Gf6mTdqkUWTVfNKu1fOzHSwlksOwZlTEpELsnxKKKys0De3Pvo2gIzeZabvCrXFLUh0FzchGeKlt0wx8 --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -117,7 +117,7 @@ test_HMY_Validator_Creation_Identity_lenght() {
     echo 
 }
 #EV2
-test_HMY_Validator_Edit_Identity_lenght() {
+test_EV2_HMY_Validator_Edit_Identity_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --identity John_d8RrBmktWjGhFuPdh5sr5parrcedikvMtVCMiYl712eiuZqIh0Sg4PD5N7Z5Gf6mTdqkUWTVfNKu1fOzHSwlksOwZlTEpELsnxKKKys0De3Pvo2gIzeZabvCrXFLUh0FzchGeKlt0wx8 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -131,7 +131,7 @@ test_HMY_Validator_Edit_Identity_lenght() {
 
 #CV6
 #Website Lenghts above 140 chars should return an error message containing the string : Exceed Maximum Length website 140
-test_HMY_Validator_Creation_Website_lenght() {
+test_CV6_HMY_Validator_Creation_Website_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -143,7 +143,7 @@ test_HMY_Validator_Creation_Website_lenght() {
     echo 
 }
 #EV3
-test_HMY_Validator_Edit_Website_lenght() {
+test_EV3_HMY_Validator_Edit_Website_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --website john@harmony.one_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -157,7 +157,7 @@ test_HMY_Validator_Edit_Website_lenght() {
 
 #CV7
 #SecurityContact Lenghts above 140 chars should return an error message containing the string : Exceed Maximum Length security-contact 140
-test_HMY_Validator_Creation_SecurityContact_lenght() {
+test_CV7_HMY_Validator_Creation_SecurityContact_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -169,7 +169,7 @@ test_HMY_Validator_Creation_SecurityContact_lenght() {
     echo 
 }
 #EV4
-test_HMY_Validator_Edit_SecurityContact_lenght() {
+test_EV4_HMY_Validator_Edit_SecurityContact_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --security-contact Alex_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -183,7 +183,7 @@ test_HMY_Validator_Edit_SecurityContact_lenght() {
 
 #CV8
 #details Lenghts above 280 chars should return an error message containing the string : Exceed Maximum Length detail 280
-test_HMY_Validator_Creation_Detail_lenght() {
+test_CV8_HMY_Validator_Creation_Detail_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5PgjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -195,7 +195,7 @@ test_HMY_Validator_Creation_Detail_lenght() {
     echo 
 }
 #EV5
-test_HMY_Validator_Edit_Detail_lenght() {
+test_EV5_HMY_Validator_Edit_Detail_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --details 'John the validator gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5PgjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P' --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -208,7 +208,7 @@ test_HMY_Validator_Edit_Detail_lenght() {
 }
 
 #CV15 commission rate > max rate
-test_HMY_Validator_Creation_commrate_above_maxrate() {
+test_CV15_HMY_Validator_Creation_commrate_above_maxrate() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.5 --max-rate 0.1 --max-change-rate 0.05 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -221,7 +221,7 @@ test_HMY_Validator_Creation_commrate_above_maxrate() {
 }
 
 #CV16 max change rate > max rate
-test_HMY_Validator_Creation_maxchangerate_above_maxrate() {
+test_CV16_HMY_Validator_Creation_maxchangerate_above_maxrate() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.2 --max-change-rate 0.5 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -234,7 +234,7 @@ test_HMY_Validator_Creation_maxchangerate_above_maxrate() {
 }
 
 #CV23	commission rate < 0
-test_HMY_Validator_Creation_commrate_below_0() {
+test_CV23_HMY_Validator_Creation_commrate_below_0() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate -0.1 --max-rate 0.2 --max-change-rate 0.05 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -247,7 +247,7 @@ test_HMY_Validator_Creation_commrate_below_0() {
 }
 
 #CV24	max rate < 0
-test_HMY_Validator_Creation_maxrate_below_0() {
+test_CV24_HMY_Validator_Creation_maxrate_below_0() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate -0.4 --max-change-rate 0.05 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -260,7 +260,7 @@ test_HMY_Validator_Creation_maxrate_below_0() {
 }
 
 #CV25	max change rate < 0
-test_HMY_Validator_Creation_maxchangerate_below_0() {
+test_CV25_HMY_Validator_Creation_maxchangerate_below_0() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.4 --max-change-rate -0.05 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -273,7 +273,7 @@ test_HMY_Validator_Creation_maxchangerate_below_0() {
 }
 
 #CV26 commission rate > 1
-test_HMY_Validator_Creation_commrate_above_1() {
+test_CV26_HMY_Validator_Creation_commrate_above_1() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 1.1 --max-rate 0.8 --max-change-rate 0.01 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -286,7 +286,7 @@ test_HMY_Validator_Creation_commrate_above_1() {
 }
 
 #CV27	max rate > 1
-test_HMY_Validator_Creation_maxrate_above_1() {
+test_CV27_HMY_Validator_Creation_maxrate_above_1() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 1.4 --max-change-rate 0.05 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -299,7 +299,7 @@ test_HMY_Validator_Creation_maxrate_above_1() {
 }
 
 #CV28	max change rate > 1
-test_HMY_Validator_Creation_maxchangerate_above_1() {
+test_CV28_HMY_Validator_Creation_maxchangerate_above_1() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.4 --max-change-rate 1.05 --min-self-delegation 1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -313,7 +313,7 @@ test_HMY_Validator_Creation_maxchangerate_above_1() {
 
 #CV31
 #amount_below_min_self_delegation
-test_HMY_Validator_Creation_amount_below_min_self_delegation() {
+test_CV31_HMY_Validator_Creation_amount_below_min_self_delegation() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 10 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -326,7 +326,7 @@ test_HMY_Validator_Creation_amount_below_min_self_delegation() {
 }
 
 #CV32 MaxTotalDelegation < MinSelfDelegation
-test_HMY_Validator_Creation_max_total_delegation_greater_than_min_self_delgation() {
+test_CV32_HMY_Validator_Creation_max_total_delegation_greater_than_min_self_delgation() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 10 --bls-pubkeys ${BLS_PUBKEY} --amount 15 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -353,7 +353,7 @@ test_HMY_Validator_Creation_max_total_delegation_greater_than_min_self_delgation
 # }
 
 #CV33 MinSelfDelegation < 1 ONE
-test_HMY_Validator_Creation_min_self_delegation_greater_than_1() {
+test_CV33_HMY_Validator_Creation_min_self_delegation_greater_than_1() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 0 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -365,7 +365,7 @@ test_HMY_Validator_Creation_min_self_delegation_greater_than_1() {
     echo 
 }
 #EV20
-test_HMY_Validator_Edit_min_self_delegation_greater_than_1() {
+test_EV20_HMY_Validator_Edit_min_self_delegation_greater_than_1() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --min-self-delegation 0 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -378,7 +378,7 @@ test_HMY_Validator_Edit_min_self_delegation_greater_than_1() {
 }
 
 #CV34	MinSelfDelegation not specified
-test_HMY_Validator_Creation_MinSelfDelegation_not_specified() {
+test_CV34_HMY_Validator_Creation_MinSelfDelegation_not_specified() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation  --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -391,7 +391,7 @@ test_HMY_Validator_Creation_MinSelfDelegation_not_specified() {
 }
 
 #CV35	MinSelfDelegation < 0
-test_HMY_Validator_Creation_MinSelfDelegation_below_0() {
+test_CV35_HMY_Validator_Creation_MinSelfDelegation_below_0() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation -1 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -404,7 +404,7 @@ test_HMY_Validator_Creation_MinSelfDelegation_below_0() {
 }
 
 #CV36	amount > MaxTotalDelegation
-test_HMY_Validator_Creation_amount_above_MaxTotalDelegation() {
+test_CV36_HMY_Validator_Creation_amount_above_MaxTotalDelegation() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation 30 --bls-pubkeys ${BLS_PUBKEY} --amount 40 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -417,7 +417,7 @@ test_HMY_Validator_Creation_amount_above_MaxTotalDelegation() {
 }
 
 #CV39	MaxTotalDelegation < 0
-test_HMY_Validator_Creation_MaxTotalDelegation_below_0() {
+test_CV39_HMY_Validator_Creation_MaxTotalDelegation_below_0() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity John --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 20 --max-total-delegation -30 --bls-pubkeys ${BLS_PUBKEY} --amount 40 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -430,7 +430,7 @@ test_HMY_Validator_Creation_MaxTotalDelegation_below_0() {
 }
 
 #CV41 no bls key specified
-test_HMY_Validator_Creation_no_bls_key_specified() {
+test_CV41_HMY_Validator_Creation_no_bls_key_specified() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking create-validator --validator-addr ${VALIDATOR_ADDR} --name John --identity john --website john@harmony.one --security-contact Alex --details 'John the validator' --rate 0.1 --max-rate 0.9 --max-change-rate 0.05 --min-self-delegation 2 --max-total-delegation 30 --bls-pubkeys --amount 3 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
