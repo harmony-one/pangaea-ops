@@ -461,7 +461,7 @@ test_CV46_HMY_Validator_Creation_amount_above_balance() {
     returncode=$?
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create amount > account balance should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Create amount > account balance' "${output}" 'staking validator already exists'
+    assertContains 'Testing Validator Create amount > account balance' "${output}" 'error: insufficient funds for gas * price + value'
     echo
     echo 
 }
