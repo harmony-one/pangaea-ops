@@ -145,7 +145,7 @@ test_EV11_HMY_Validator_Edit_Detail_lenght() {
 #assumed you are not at the max-rate
 test_EV12_HMY_Validator_Edit_rate() {
     rate=$(echo ${validator_information} | jq -r ".result.commission.rate")
-    new_rate=$(echo ${rate} + 0.01)
+    new_rate=$(echo ${rate} + 0.01 | bc)
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --rate ${new_rate} --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
