@@ -15,8 +15,8 @@ git clone https://github.com/kward/shunit2.git
 ### Create a new wallet
 
 ```bash
-curl -LO <https://harmony.one/wallet.sh> && chmod +x wallet.sh
-./wallet.sh new
+curl -LO https://harmony.one/hmycli && mv hmycli hmy && chmod +x hmy
+./hmy keys add example-account --use-own-passphrase
 ```
 
 ### locate the keystore file and import it

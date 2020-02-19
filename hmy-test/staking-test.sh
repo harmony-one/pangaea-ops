@@ -2,7 +2,8 @@
 # Author: P-OPS soph 
 
 # Tests all the negative scenarios
-# for edit test if in this file -> assumed that your validator is already created with the bls and validator one account defined in the config.sh
+# for edit test if in this file -> assumed that your validator is already created
+# the bls and validator one account defined in the config.sh
 # in those variable :  ${VALIDATOR_ADDR} and ${BLS_PUBKEY}
 
 source $(dirname "$0")/config.sh
@@ -86,7 +87,9 @@ test_HMY_Validator_Creation_Name_lenght() {
     echo
     echo 
 }
-test_HMY_Validator_Edit_Name_lenght() {
+
+#EV7 name longer than 140 characters
+test_EV7_HMY_Validator_Edit_Name_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --name John_d8RrBmktWjGhFuPdh5sr5parrcedikvMtVCMiYl712eiuZqIh0Sg4PD5N7Z5Gf6mTdqkUWTVfNKu1fOzHSwlksOwZlTEpELsnxKKKys0De3Pvo2gIzeZabvCrXFLUh0FzchGeKlt0wx8 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -125,8 +128,8 @@ test_CV5_HMY_Validator_Creation_Identity_lenght() {
     echo
     echo 
 }
-#EV2
-test_EV2_HMY_Validator_Edit_Identity_lenght() {
+#EV8
+test_EV8_HMY_Validator_Edit_Identity_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --identity John_d8RrBmktWjGhFuPdh5sr5parrcedikvMtVCMiYl712eiuZqIh0Sg4PD5N7Z5Gf6mTdqkUWTVfNKu1fOzHSwlksOwZlTEpELsnxKKKys0De3Pvo2gIzeZabvCrXFLUh0FzchGeKlt0wx8 --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -151,8 +154,8 @@ test_CV6_HMY_Validator_Creation_Website_lenght() {
     echo
     echo 
 }
-#EV3
-test_EV3_HMY_Validator_Edit_Website_lenght() {
+#EV9
+test_EV9_HMY_Validator_Edit_Website_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --website john@harmony.one_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -177,8 +180,8 @@ test_CV7_HMY_Validator_Creation_SecurityContact_lenght() {
     echo
     echo 
 }
-#EV4
-test_EV4_HMY_Validator_Edit_SecurityContact_lenght() {
+#EV10
+test_EV10_HMY_Validator_Edit_SecurityContact_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --security-contact Alex_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
@@ -203,8 +206,8 @@ test_CV8_HMY_Validator_Creation_Detail_lenght() {
     echo
     echo 
 }
-#EV5
-test_EV5_HMY_Validator_Edit_Detail_lenght() {
+#EV11
+test_EV11_HMY_Validator_Edit_Detail_lenght() {
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --details 'John the validator gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5PgjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P' --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
