@@ -88,19 +88,6 @@ test_HMY_Validator_Creation_Name_lenght() {
     echo 
 }
 
-#EV7 name longer than 140 characters
-test_EV7_HMY_Validator_Edit_Name_lenght() {
-    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --name John_d8RrBmktWjGhFuPdh5sr5parrcedikvMtVCMiYl712eiuZqIh0Sg4PD5N7Z5Gf6mTdqkUWTVfNKu1fOzHSwlksOwZlTEpELsnxKKKys0De3Pvo2gIzeZabvCrXFLUh0FzchGeKlt0wx8 --chain-id ${chainid}"
-    echo "command executed : ${test_cmd}"
-    output=$((eval "${test_cmd}") 2>&1)
-    returncode=$?
-    echo "command output : ${output}"
-    assertEquals 'Testing error code of hmy Validator edit Name lenght test which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator edit Name lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
-    echo
-    echo 
-}
-
 #CV3 Validator already exist, below assume the validator has already been created
 #as 16 Feb 2020, currently not working as network doesn't return any staking failure error message
 test_CV3_HMY_Validator_Creation_already_exist() {
@@ -128,18 +115,6 @@ test_CV5_HMY_Validator_Creation_Identity_lenght() {
     echo
     echo 
 }
-#EV8
-test_EV8_HMY_Validator_Edit_Identity_lenght() {
-    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --identity John_d8RrBmktWjGhFuPdh5sr5parrcedikvMtVCMiYl712eiuZqIh0Sg4PD5N7Z5Gf6mTdqkUWTVfNKu1fOzHSwlksOwZlTEpELsnxKKKys0De3Pvo2gIzeZabvCrXFLUh0FzchGeKlt0wx8 --chain-id ${chainid}"
-    echo "command executed : ${test_cmd}"
-    output=$((eval "${test_cmd}") 2>&1)
-    returncode=$?
-    echo "command output : ${output}"
-    assertEquals 'Testing error code of hmy Validator Create Identity lenght test which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Edit Identity lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
-    echo
-    echo 
-}
 
 #CV6
 #Website Lenghts above 140 chars should return an error message containing the string : Exceed Maximum Length website 140
@@ -154,18 +129,7 @@ test_CV6_HMY_Validator_Creation_Website_lenght() {
     echo
     echo 
 }
-#EV9
-test_EV9_HMY_Validator_Edit_Website_lenght() {
-    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --website john@harmony.one_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --chain-id ${chainid}"
-    echo "command executed : ${test_cmd}"
-    output=$((eval "${test_cmd}") 2>&1)
-    returncode=$?
-    echo "command output : ${output}"
-    assertEquals 'Testing error code of hmy Validator Create Website lenght test which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Edit Website lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
-    echo
-    echo 
-};
+
 
 #CV7
 #SecurityContact Lenghts above 140 chars should return an error message containing the string : Exceed Maximum Length security-contact 140
@@ -180,18 +144,6 @@ test_CV7_HMY_Validator_Creation_SecurityContact_lenght() {
     echo
     echo 
 }
-#EV10
-test_EV10_HMY_Validator_Edit_SecurityContact_lenght() {
-    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --security-contact Alex_gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P --chain-id ${chainid}"
-    echo "command executed : ${test_cmd}"
-    output=$((eval "${test_cmd}") 2>&1)
-    returncode=$?
-    echo "command output : ${output}"
-    assertEquals 'Testing error code of hmy Validator Create SecurityContact lenght test which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Edit Security Contact lenght test above 140' "${output}" 'exceeds maximum length of 140 characters'
-    echo
-    echo 
-}
 
 #CV8
 #details Lenghts above 280 chars should return an error message containing the string : Exceed Maximum Length detail 280
@@ -203,18 +155,6 @@ test_CV8_HMY_Validator_Creation_Detail_lenght() {
     echo "command output : ${output}"
     assertEquals 'Testing error code of hmy Validator Create detail lenght test which should be 1' "1" "${returncode}"
     assertContains 'Testing Validator Create detail lenght test above 280' "${output}" 'exceeds maximum length of 280 characters'
-    echo
-    echo 
-}
-#EV11
-test_EV11_HMY_Validator_Edit_Detail_lenght() {
-    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --details 'John the validator gjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5PgjuDthEfXKsguvVih7WEFGgQRbolcgAeg40lO6zz0pHsfbh2sdMarB9mmopL6WdQlCJ3CJmp2437Qw4Hcyp47L2gBhNTZ8D6DjQ0UkK42Q5JkB3GuDUiyMNtMEVNXiN5ddTWQtcfuJ5P' --chain-id ${chainid}"
-    echo "command executed : ${test_cmd}"
-    output=$((eval "${test_cmd}") 2>&1)
-    returncode=$?
-    echo "command output : ${output}"
-    assertEquals 'Testing error code of hmy Validator Create detail lenght test which should be 1' "1" "${returncode}"
-    assertContains 'Testing Validator Edit detail lenght test above 280' "${output}" 'exceeds maximum length of 280 characters'
     echo
     echo 
 }

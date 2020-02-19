@@ -39,9 +39,12 @@ by default test would use the config.sh
 ```bash
 bash pangaea-ops/hmy-test/basic-test.sh
 bash pangaea-ops/hmy-test/staking-test.sh
+bash pangaea-ops/hmy-test/staking-edit.sh
 ```
 
-or bash pangaea-ops/hmy-test/staking-test.sh <VALIDATOR_ONE_ACCOUNT> <VALIDATOR_BLS_PUBKEY> to overwrite values in config.sh
+or bash pangaea-ops/hmy-test/staking-test.sh <VALIDATOR_ONE_ACCOUNT> <VALIDATOR_BLS_PUBKEY> 
+bash pangaea-ops/hmy-test/staking-edit.sh <VALIDATOR_ONE_ACCOUNT> <VALIDATOR_BLS_PUBKEY> 
+to overwrite values in config.sh
 
 ```
 bash pangaea-ops/hmy-test/staking-test.sh one1u6c4wer2dkm767hmjeehnwu6tqqur62gx9vqsd 7a43b05c6a2d9ba06bafdc22c4ef48a0e414775ab5b73de3fa34f8537260e8e82a70676326f2b4e8e9af086de36f1018
