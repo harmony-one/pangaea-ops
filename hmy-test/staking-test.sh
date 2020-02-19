@@ -11,7 +11,15 @@ source $(dirname "$0")/config.sh
 BLS_PASSPHRASE=""
 
 #optional argument tag to allow faster execution of the test while dev are fixing it https://github.com/harmony-one/harmony/issues/2276
-OPT_ARGS="--timeout 8"
+OPT_ARGS= "" #"--timeout 8" now fixed as of 19 Feb
+
+# overwrite VALIDATOR_ADDR and BLS_PUBKEY if they are passed in argument
+if [ $# -eq 2 ]; then
+    VALIDATOR_ADDR = $1
+    BLS_PUBKEY = $2
+fi
+
+
 
 #test needs run in the same folder as the bls.key file
 setUp() {

@@ -25,16 +25,26 @@ curl -LO <https://harmony.one/wallet.sh> && chmod +x wallet.sh
 ./hmy keys import-ks ${pwd}/keystore/UTC--2019-11.....
 ```
 
-take note of your one address and update VALIDATOR_ADDR variable.
+take note of your one address (ie one1u6c4wer2dkm767hmjeehnwu6tqqur62gx9vqsd) and BLS pub Key (ie 7a43b05c6a2d9ba06bafdc22c4ef48a0e414775ab5b73de3fa34f8537260e8e82a70676326f2b4e8e9af086de36f1018) 
 
 ## Update the config variable file
 
-in pangaea-ops/hmy-test/config.sh
+in pangaea-ops/hmy-test/config.sh if you wanna use staking test without argument
+
+If not, then just skip that section
 
 ## Execute the test
 
+by default test would use the config.sh
 ```bash
 bash pangaea-ops/hmy-test/basic-test.sh
-or
 bash pangaea-ops/hmy-test/staking-test.sh
 ```
+
+or bash pangaea-ops/hmy-test/staking-test.sh <VALIDATOR_ONE_ACCOUNT> <VALIDATOR_BLS_PUBKEY> to overwrite values in config.sh
+
+```
+bash pangaea-ops/hmy-test/staking-test.sh one1u6c4wer2dkm767hmjeehnwu6tqqur62gx9vqsd 7a43b05c6a2d9ba06bafdc22c4ef48a0e414775ab5b73de3fa34f8537260e8e82a70676326f2b4e8e9af086de36f1018
+```
+
+the above allows you to recall the command after a git pull/git merge that could have eventually overwrite your config.sh

@@ -8,7 +8,7 @@ SHUNITPATH=${HARMONYPATH}"shunit2/shunit2"
 HMYCLI_ABSOLUTE_FOLDER=${HARMONYPATH}
 HMYCLIBIN="./hmy"
 # hmy cli version
-HMYCLIVERSION="v279-8b78c50"
+HMYCLIVERSION="v285-24f7cd2"
 
 #chain-id this test file is supposed run against
 #available chain-id
