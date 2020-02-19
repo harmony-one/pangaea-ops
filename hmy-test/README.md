@@ -5,7 +5,7 @@
 - shell binaries/script required by the test script the same folder as node.sh and hmy binary
 
 ```bash
-apt-get install -y jq bc
+apt-get install -y jq bc awk
 git clone https://github.com/harmony-one/pangaea-ops.git
 git clone https://github.com/kward/shunit2.git
 ```
