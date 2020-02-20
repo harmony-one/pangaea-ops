@@ -36,7 +36,7 @@ test_EV1_HMY_Validator_Edit_name() {
     output=$((eval "${test_cmd}") 2>&1)
     returncode=$?
     echo "command output : ${output}"
-    assertEquals 'Testing edit validator name which should succeed with 0' "0" "${returncode}"
+    assertEquals 'Testing edit validator name should succeed with 0' "0" "${returncode}"
     assertContains 'Testing edit validator name should have "status": "0x1"' "${output}" '"status": "0x1"' 
     echo
     echo 
@@ -49,8 +49,47 @@ test_EV2_HMY_Validator_Edit_identity() {
     output=$((eval "${test_cmd}") 2>&1)
     returncode=$?
     echo "command output : ${output}"
-    assertEquals 'Testing edit validator identity which should succeed with 0' "0" "${returncode}"
+    assertEquals 'Testing edit validator identity should succeed with 0' "0" "${returncode}"
     assertContains 'Testing edit validator identity should have "status": "0x1"' "${output}" '"status": "0x1"' 
+    echo
+    echo 
+}
+
+#EV3 Edit website - Valid test
+test_EV3_HMY_Validator_Edit_website() {
+    test_cmd="${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --website website_auto_edited --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing edit validator website should succeed with 0' "0" "${returncode}"
+    assertContains 'Testing edit validator website should have "status": "0x1"' "${output}" '"status": "0x1"' 
+    echo
+    echo 
+}
+
+#EV4 Edit security contact - Valid test
+test_EV4_HMY_Validator_Edit_security_contact() {
+    test_cmd="${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --security-contact security-contact_auto_edited --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing edit validator security contact should succeed with 0' "0" "${returncode}"
+    assertContains 'Testing edit validator security contact should have "status": "0x1"' "${output}" '"status": "0x1"' 
+    echo
+    echo 
+}
+
+#EV5 Edit details - Valid test
+test_EV5_HMY_Validator_Edit_details() {
+    test_cmd="${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --details details_auto_edited --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing edit validator details should succeed with 0' "0" "${returncode}"
+    assertContains 'Testing edit validator details should have "status": "0x1"' "${output}" '"status": "0x1"' 
     echo
     echo 
 }
@@ -143,6 +182,21 @@ test_EV11_HMY_Validator_Edit_Detail_lenght() {
 #EV12 Edit commission rate - Valid test
 #note if you executed that test less than 1 epoch ago, it will fail
 #assumed you are not at the max-rate
+test_EV12_HMY_Validator_Edit_rate() {
+    rate=$(echo ${validator_information} | jq -r ".result.commission.rate")
+    new_rate=$(echo ${rate} + 0.01 | bc | awk '{printf "%f", $0}')
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --rate ${new_rate} --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Edit commission rate which should succeed with 0' "0" "${returncode}"
+    assertContains 'Testing Validator Edit commission rate' "${output}" '"status": "0x1"'
+    echo
+    echo     
+}
+
+#EV13 Commission rate change > max change rate (within the same epoch)
 test_EV12_HMY_Validator_Edit_rate() {
     rate=$(echo ${validator_information} | jq -r ".result.commission.rate")
     new_rate=$(echo ${rate} + 0.01 | bc | awk '{printf "%f", $0}')
