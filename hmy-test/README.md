@@ -38,7 +38,7 @@ If not, then just skip that section
 by default test would use the config.sh
 ```bash
 bash pangaea-ops/hmy-test/basic-test.sh
-bash pangaea-ops/hmy-test/staking-test.sh
+bash pangaea-ops/hmy-test/staking-create.sh
 bash pangaea-ops/hmy-test/staking-edit.sh
 ```
 
