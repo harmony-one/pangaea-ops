@@ -199,7 +199,7 @@ test_EV12_HMY_Validator_Edit_rate() {
 #EV13 Commission rate change > max change rate (within the same epoch should not be allowed) - fail test
 test_EV13_HMY_Validator_Edit_rate_within_same_epoch() {
     rate=$(echo ${validator_information} | jq -r ".result.commission.rate")
-    maxchangerate=$(echo ${validator_information} | jq -r ".result.commission.max-change-rate")
+    maxchangerate=$(echo ${validator_information} | jq -r '.result.commission."max-change-rate"')
     new_rate=$(echo ${rate} + ${maxchangerate} | bc | awk '{printf "%f", $0}')
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --rate ${new_rate} --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
