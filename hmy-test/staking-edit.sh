@@ -100,7 +100,7 @@ test_EV6_edit_all_back()
     original_name=$(echo ${validator_information} |  jq -r ".result.description.name")
     original_identity=$(echo ${validator_information} |  jq -r ".result.description.identity")
     original_details=$(echo ${validator_information} |  jq -r ".result.description.details")
-    original_security_contact=$(echo ${validator_information} |  jq -r ".result.description.security_contact")
+    original_security_contact=$(echo ${validator_information} |  jq -r '.result.description."security_contact"')
     original_website=$(echo ${validator_information} |  jq -r ".result.description.website")
 
     test_cmd="${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --name ${original_name} --identity ${original_identity} --details ${original_details} --security-contact ${original_security_contact} --website ${original_website} --chain-id ${chainid}"
@@ -206,7 +206,7 @@ test_EV13_HMY_Validator_Edit_rate_within_same_epoch() {
     output=$((eval "${test_cmd}") 2>&1)
     returncode=$?
     echo "command output : ${output}"
-    assertEquals 'Testing error code of hmy Validator Edit commission rate which should succeed with 0' "0" "${returncode}"
+    assertEquals 'Testing error code of hmy Validator Edit commission rate which should succeed with 1' "1" "${returncode}"
     assertContains 'Testing Validator Edit commission rate' "${output}" 'change on commission rate can not be more than max change rate within the same epoch'
     echo
     echo     
