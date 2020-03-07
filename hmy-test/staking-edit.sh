@@ -100,7 +100,7 @@ test_EV6_edit_all_back()
     original_name=$(echo ${validator_information} |  jq -r ".result.description.name")
     original_identity=$(echo ${validator_information} |  jq -r ".result.description.identity")
     original_details=$(echo ${validator_information} |  jq -r ".result.description.details")
-    original_security_contact=$(echo ${validator_information} |  jq -r ".result.description.security_contact")
+    original_security_contact=$(echo ${validator_information} |  jq -r '.result.description."security_contact"')
     original_website=$(echo ${validator_information} |  jq -r ".result.description.website")
 
     test_cmd="${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --name ${original_name} --identity ${original_identity} --details ${original_details} --security-contact ${original_security_contact} --website ${original_website} --chain-id ${chainid}"
@@ -196,19 +196,46 @@ test_EV12_HMY_Validator_Edit_rate() {
     echo     
 }
 
-#EV13 Commission rate change > max change rate (within the same epoch)
-test_EV12_HMY_Validator_Edit_rate() {
+#EV13 Commission rate change > max change rate (within the same epoch should not be allowed) - fail test
+test_EV13_HMY_Validator_Edit_rate_within_same_epoch() {
     rate=$(echo ${validator_information} | jq -r ".result.commission.rate")
-    new_rate=$(echo ${rate} + 0.01 | bc | awk '{printf "%f", $0}')
+    maxchangerate=$(echo ${validator_information} | jq -r '.result.commission."max-change-rate"')
+    new_rate=$(echo ${rate} + ${maxchangerate} | bc | awk '{printf "%f", $0}')
     test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --rate ${new_rate} --chain-id ${chainid}"
     echo "command executed : ${test_cmd}"
     output=$((eval "${test_cmd}") 2>&1)
     returncode=$?
     echo "command output : ${output}"
-    assertEquals 'Testing error code of hmy Validator Edit commission rate which should succeed with 0' "0" "${returncode}"
-    assertContains 'Testing Validator Edit commission rate' "${output}" '"status": "0x1"'
+    assertEquals 'Testing error code of hmy Validator Edit commission rate which should succeed with 1' "1" "${returncode}"
+    assertContains 'Testing Validator Edit commission rate' "${output}" 'change on commission rate can not be more than max change rate within the same epoch'
     echo
     echo     
+}
+
+#EV20
+test_EV20_HMY_Validator_Edit_min_self_delegation_greater_than_1() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR} --min-self-delegation 0 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Create min self delegation test which should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Edit -min-self-delegation 0 (should be greater than 1)' "${output}" 'min-self-delegation can not be less than 1 ONE'
+    echo
+    echo 
+}
+
+#EV25 MaxTotalDelegation < MinSelfDelegation
+test_EV25_HMY_Validator_Edit_max_total_delegation_greater_than_min_self_delgation() {
+    test_cmd="echo ${BLS_PASSPHRASE} | ${HMYCLIBIN} --node=https://${apiendpoint} staking edit-validator --validator-addr ${VALIDATOR_ADDR}  --min-self-delegation 20 --max-total-delegation 10 --chain-id ${chainid}"
+    echo "command executed : ${test_cmd}"
+    output=$((eval "${test_cmd}") 2>&1)
+    returncode=$?
+    echo "command output : ${output}"
+    assertEquals 'Testing error code of hmy Validator Edit MaxTotalDelegation < MinSelfDelegation should be 1' "1" "${returncode}"
+    assertContains 'Testing Validator Edit MaxTotalDelegation < MinSelfDelegation' "${output}" 'max-total-delegation can not be less than min-self-delegation'
+    echo
+    echo 
 }
 
 # Load and run shUnit2.
